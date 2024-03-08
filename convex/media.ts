@@ -49,6 +49,7 @@ export const getById = query({
   },
 });
 
+// TODO: Apply vector search here
 export const getByName = query({
   args: {
     name: v.string(),
@@ -128,7 +129,7 @@ export const deleteById = mutation({
       return await ctx.db.delete(id);
     } catch (e) {
       console.log(e);
-      return "Failed to delete media by user";
+      return "Failed to delete media";
     }
   },
 });
@@ -154,12 +155,6 @@ export const update = mutation({
     }
   },
 });
-
-/**
- * TODO:
- * Get by time
- * Get by artists featuring
- */
 
 export const generateUploadUrl = mutation({
   args: {},
