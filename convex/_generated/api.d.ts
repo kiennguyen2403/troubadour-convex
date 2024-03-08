@@ -14,6 +14,10 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as media from "../media.js";
+import type * as schemas_genreSchema from "../schemas/genreSchema.js";
+import type * as schemas_mediaSchema from "../schemas/mediaSchema.js";
+import type * as schemas_playlistSchema from "../schemas/playlistSchema.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -23,7 +27,12 @@ import type {
  * const myFunctionReference = api.myModule.myFunction;
  * ```
  */
-declare const fullApi: ApiFromModules<{}>;
+declare const fullApi: ApiFromModules<{
+  media: typeof media;
+  "schemas/genreSchema": typeof schemas_genreSchema;
+  "schemas/mediaSchema": typeof schemas_mediaSchema;
+  "schemas/playlistSchema": typeof schemas_playlistSchema;
+}>;
 export declare const api: FilterApi<
   typeof fullApi,
   FunctionReference<any, "public">
