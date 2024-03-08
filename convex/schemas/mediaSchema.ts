@@ -3,7 +3,7 @@ import { v } from "convex/values";
 
 export const mediaSchema = {
   media: defineTable({
-    user: v.id("user"),
+    userId: v.id("user"),
     otherUsers: v.array(v.id("user")),
     genres: v.array(v.id("genre")),
     name: v.string(),

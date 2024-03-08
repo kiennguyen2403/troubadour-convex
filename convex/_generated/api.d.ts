@@ -14,7 +14,9 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as genre from "../genre.js";
 import type * as media from "../media.js";
+import type * as playlist from "../playlist.js";
 import type * as schemas_genreSchema from "../schemas/genreSchema.js";
 import type * as schemas_mediaSchema from "../schemas/mediaSchema.js";
 import type * as schemas_playlistSchema from "../schemas/playlistSchema.js";
@@ -28,7 +30,9 @@ import type * as schemas_playlistSchema from "../schemas/playlistSchema.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  genre: typeof genre;
   media: typeof media;
+  playlist: typeof playlist;
   "schemas/genreSchema": typeof schemas_genreSchema;
   "schemas/mediaSchema": typeof schemas_mediaSchema;
   "schemas/playlistSchema": typeof schemas_playlistSchema;

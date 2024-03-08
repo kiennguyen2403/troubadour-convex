@@ -4,7 +4,7 @@ import { paginationOptsValidator } from "convex/server";
 
 export const post = mutation({
   args: {
-    user: v.id("user"),
+    userId: v.id("user"),
     otherUsers: v.array(v.id("user")),
     genres: v.array(v.id("genre")),
     name: v.string(),
@@ -107,15 +107,31 @@ export const getByUserId = query({
       return paginationOpts
         ? await ctx.db
             .query("media")
-            .filter((q) => q.eq(q.field("user"), userId))
+            .filter((q) => q.eq(q.field("userId"), userId))
             .paginate(paginationOpts)
         : await ctx.db
             .query("media")
-            .filter((q) => q.eq(q.field("user"), userId))
+            .filter((q) => q.eq(q.field("userId"), userId))
             .collect();
     } catch (e) {
       console.log(e);
       return "Failed to get media by user";
+    }
+  },
+});
+
+export const getByArtists = query({
+  args: { artistId: v.id("user") },
+  handler: async (ctx, { artistId }) => {
+    try {
+      const medias = await ctx.db.query("media").collect();
+
+      return medias.filter(
+        ({ userId, otherUsers }) => otherUsers.includes(artistId) || userId === artistId
+      );
+    } catch (e) {
+      console.log(e);
+      return "Failed to get media by artist";
     }
   },
 });
