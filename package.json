@@ -9,9 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^4.30.7",
+    "@clerk/nextjs": "^4.29.9",
+    "clerk": "^0.8.3",
     "convex": "^1.10.0",
+    "dotenv": "^16.4.5",
     "next": "14.1.1",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "swr": "^2.2.5"
+  },
+  "devDependencies": {
+    "@types/node": "20.11.25",
+    "@types/react": "18.2.64",
+    "typescript": "4.6.4"
   }
 }
