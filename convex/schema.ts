@@ -11,6 +11,7 @@ export default defineSchema(
     ...genreSchema,
   },
   {
+    strictTableNameTypes: false,
     schemaValidation: false,
   }
 );

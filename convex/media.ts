@@ -11,6 +11,7 @@ export const post = mutation({
     dateTime: v.number(),
     privacy: v.union(v.literal("public"), v.literal("private")),
     fileUrl: v.string(),
+    storageId: v.id("_storage"),
     comments: v.array(v.id("comments")),
     views: v.number(),
     likes: v.number(),
@@ -159,3 +160,32 @@ export const update = mutation({
  * Get by time
  * Get by artists featuring
  */
+
+export const generateUploadUrl = mutation({
+  args: {},
+  handler: async (ctx, args) => {
+    try {
+      // TODO: authentication for upload
+      //   const identity = await ctx.auth.getUserIdentity();
+      //   if (identity === null) {
+      //     throw new Error("Unauthenticated call to mutation");
+      //   }
+      return await ctx.storage.generateUploadUrl();
+    } catch (e) {
+      console.log(e);
+      return "Failed to generare upload URL";
+    }
+  },
+});
+
+export const getMediaUrl = mutation({
+  args: { storageId: v.id("_storage") },
+  handler: async (ctx, { storageId }) => {
+    try {
+      return await ctx.storage.getUrl(storageId);
+    } catch (e) {
+      console.log(e);
+      return "Failed to get media URL";
+    }
+  },
+});

@@ -10,6 +10,7 @@ export const mediaSchema = {
     dateTime: v.number(), // Note: This may be changed to updateTime later since _creationTime is default in convex schema
     privacy: v.union(v.literal("public"), v.literal("private")),
     fileUrl: v.string(),
+    storageId: v.id("_storage"),
     comments: v.array(v.id("comments")),
     views: v.number(),
     likes: v.number(), // Note: In the future, likes should be a table with two PK: media and user.
