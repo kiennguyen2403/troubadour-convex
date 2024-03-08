@@ -15,6 +15,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as event from "../event.js";
+import type * as muxActions from "../muxActions.js";
 import type * as ticket from "../ticket.js";
 
 /**
@@ -27,6 +28,7 @@ import type * as ticket from "../ticket.js";
  */
 declare const fullApi: ApiFromModules<{
   event: typeof event;
+  muxActions: typeof muxActions;
   ticket: typeof ticket;
 }>;
 export declare const api: FilterApi<

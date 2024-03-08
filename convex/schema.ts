@@ -19,7 +19,6 @@ export default defineSchema({
         name: v.string(),
         user: v.optional(v.id("user")),
         status: v.string(),
-        event: v.id("event"),
         fee: v.number(),
     })
 });

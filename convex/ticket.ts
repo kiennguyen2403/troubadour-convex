@@ -5,19 +5,16 @@ export const post = internalMutation({
     args: {
         name: v.string(),
         fee: v.number(),
-        event: v.id("event"),
     },
     handler: async (ctx, args) => {
         try {
             if (!args.name) return "No name provided for ticket post";
             if (!args.fee) return "No fee provided for ticket post";
-            if (!args.event) return "No event provided for ticket post";
-
+    
             return await ctx.db
                 .insert("ticket", {
                     name: args.name,
                     fee: args.fee,
-                    event: args.event,
                     status: "active",
                 });
         } catch (e) {
@@ -77,24 +74,6 @@ export const getByUser = query({
     }
 });
 
-export const getByEvent = query({
-    args: {
-        event: v.id("event"),
-    },
-    handler: async (ctx, args) => {
-        try {
-            if (!args.event) return "No event provided for ticket get by event";
-            return await ctx.db
-                .query("ticket")
-                .filter((q) => q.eq(q.field('event'), args.event))
-                .collect();
-        } catch (e) {
-            console.log(e);
-            return "failure";
-        }
-    }
-});
-
 export const deleteByID = mutation({
     args: {
         id: v.id("ticket"),
@@ -137,7 +116,6 @@ export const update = internalMutation({
         id: v.id("ticket"),
         name: v.string(),
         user: v.id("user"),
-        event: v.id("event"),
         fee: v.number(),
         status: v.string(),
     },
