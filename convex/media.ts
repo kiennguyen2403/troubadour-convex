@@ -189,3 +189,17 @@ export const getMediaUrl = mutation({
     }
   },
 });
+
+export const deleteMediaFile = mutation({
+  args: {
+    storageId: v.id("_storage"),
+  },
+  handler: async (ctx, { storageId }) => {
+    try {
+      return await ctx.storage.delete(storageId);
+    } catch (e) {
+      console.log(e);
+      return "Failed to delete media file";
+    }
+  },
+});
