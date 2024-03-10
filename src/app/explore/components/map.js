@@ -2,6 +2,29 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { GoogleMap, useJsApiLoader, Marker, Circle, InfoWindow } from '@react-google-maps/api';
 import { Box, Typography } from '@mui/material';
+import { useAction, useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+
+
+const darkMapStyles = [
+    {
+        featureType: 'all',
+        elementType: 'labels.text.fill',
+        stylers: [
+            {
+                saturation: 36,
+            },
+            {
+                color: '#000000',
+            },
+            {
+                lightness: 40,
+            },
+        ],
+    },
+    // Add more styles as needed
+];
+
 const containerStyle = {
     width: '100%',
     height: '85vh'
@@ -17,7 +40,7 @@ const circleOptions = {
     strokeOpacity: 0.8,
     strokeWeight: 2,
     fillColor: '#FF0000', // Replace with your desired fill color
-    fillOpacity: 0.35,
+    fillOpacity: 0.7,
     clickable: false,
     draggable: false,
     editable: false,
@@ -33,6 +56,8 @@ function Map() {
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
     })
 
+    const events = useQuery(api.event.get, {});
+    console.log(events);
 
 
     const onLoad = useCallback(function callback(map) {
@@ -47,11 +72,6 @@ function Map() {
         setMap(null)
     }, [])
 
-    const handleMarkerClick = () => {
-        console.log('clicked');
-        setInfoWindowOpen(!infoWindowOpen);
-    };
-
     return isLoaded ? (
         <GoogleMap
             mapContainerStyle={containerStyle}
@@ -60,14 +80,20 @@ function Map() {
             onLoad={onLoad}
             onUnmount={onUnmount}
         >
-            <Marker
-                position={center}
-                onClick={handleMarkerClick}
-            />
-            <Circle
-                center={center}
-                options={circleOptions}
-                onClick={handleMarkerClick} />
+            {
+                events?.map((event) => {
+                    return <Marker
+                        key={event.id}
+                        position={{
+                            lat: event.xCoordinate,
+                            lng: event.yCoordinate
+                        }}
+                        onClick={(e)=>{
+                            setInfoWindowOpen(!infoWindowOpen);
+                        }}
+                    />
+                })
+            }
             {infoWindowOpen && (
                 <InfoWindow
                     position={center}
