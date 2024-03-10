@@ -1,11 +1,11 @@
 "use client";
 import React from "react";
 import { Inter } from "next/font/google";
-import { ConvexReactClient } from "convex/react";
-import ConvexClientProvider from "./ConvexClientProvider";
+import ConvexClientProvider from "../convex/ConvexClientProvider";
 import ThemeProviderWrapper from "../theme/theme-provider-wrapper";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import ReduxProviderWrapper from "../redux/reduxProvider";
+import { dark } from "@clerk/themes";
 
 const inter = Inter({ subsets: ["latin"] });
 

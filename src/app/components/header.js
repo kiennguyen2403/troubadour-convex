@@ -55,6 +55,7 @@ export default function ClippedDrawer({ Component }) {
   const [isOptionUploadOpen, setIsOptionUploadOpen] = useState(false);
   const [isMultipleFormOpen, setIsMultipleFormOpen] = useState(false);
   const [isLiveMultipleFormOpen, setIsLiveMultipleFormOpen] = useState(false);
+  const { isAuthenticated, isLoading } = useConvexAuth();
 
   const handleOptionLoginClick = () => {
     setIsOptionLoginOpen(!isOptionLoginOpen);
@@ -128,7 +129,7 @@ export default function ClippedDrawer({ Component }) {
         </ListItemButton>
       </ListItem>
     ));
-  const { isAuthenticated, isLoading } = useConvexAuth();
+
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -181,7 +182,21 @@ export default function ClippedDrawer({ Component }) {
             <UserButton afterSignOutUrl="/" />
           ) : (
             <div>
-              <SignInButton></SignInButton>
+              <SignInButton>
+                <IconButton
+                  style={{ marginLeft: "auto" }}
+                  size="large"
+                  aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={() => {
+                    router.push("/");
+                  }}
+                  color="inherit"
+                >
+                  <AccountCircle />
+                </IconButton>
+              </SignInButton>
             </div>
           )}
         </Toolbar>

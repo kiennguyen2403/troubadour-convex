@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^4.30.7",
+    "@clerk/nextjs": "^4.29.9",
+    "@clerk/themes": "^1.7.9",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
@@ -18,8 +21,6 @@
     "@mux/mux-player-react": "^2.3.3",
     "@reduxjs/toolkit": "^2.2.1",
     "axios": "^1.6.7",
-    "@clerk/clerk-react": "^4.30.7",
-    "@clerk/nextjs": "^4.29.9",
     "clerk": "^0.8.3",
     "convex": "^1.10.0",
     "dotenv": "^16.4.5",
