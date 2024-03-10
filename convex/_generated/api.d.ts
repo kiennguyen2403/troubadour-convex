@@ -14,8 +14,11 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as comment from "../comment.js";
+
 import type * as event from "../event.js";
+import type * as muxActions from "../muxActions.js";
+import type * as ticket from "../ticket.js";
+import type * as comment from "../comment.js";
 import type * as user from "../user.js";
 
 /**
@@ -27,8 +30,10 @@ import type * as user from "../user.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  comment: typeof comment;
   event: typeof event;
+  muxActions: typeof muxActions;
+  ticket: typeof ticket;
+  comment: typeof comment;
   user: typeof user;
 }>;
 export declare const api: FilterApi<
