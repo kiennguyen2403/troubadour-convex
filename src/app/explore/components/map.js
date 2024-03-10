@@ -79,6 +79,14 @@ function Map() {
             zoom={10}
             onLoad={onLoad}
             onUnmount={onUnmount}
+            options={{
+                styles: darkMapStyles,
+                disableDefaultUI: true,
+                zoomControl: false,
+                mapTypeControl: false,
+                scaleControl: false,
+                streetViewControl: false,
+            }}
         >
             {
                 events?.map((event) => {
