@@ -20,5 +20,24 @@ export default defineSchema({
         user: v.optional(v.id("user")),
         status: v.string(),
         fee: v.number(),
-    })
+    }),
+    user: defineTable({
+    name: v.string(),
+    tokenIdentifier: v.string(),
+    role: v.string(),
+    }).index("by_token", ["tokenIdentifier"]),
+    history: defineTable({
+      userID: v.id("user"),
+      playlists: v.array(v.id("playlist")),
+      genres: v.array(v.id("genre")),
+      medias: v.array(v.id("media")),
+      currentMedia: v.id("media"),
+    }),
+    comment: defineTable({
+      content: v.string(),
+      user: v.id("user"),
+      mediaID: v.id("media"),
+      eventID: v.id("event"),
+      likes: v.number(),
+    }),
 });
