@@ -20,7 +20,7 @@ import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import ExploreIcon from "@mui/icons-material/Explore";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import IconButton from "@mui/material/IconButton";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Button, Grid } from "@mui/material";
 import MediaControl from "./media-controller";
 import Avatar from "@mui/material/Avatar";
@@ -42,7 +42,8 @@ import React from "react";
 import { SignInButton, UserButton, auth } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs";
 import { useConvexAuth } from "convex/react";
-import useStoreUserEffect from "../../useStoreUserEffect";
+import { SignIn } from "@clerk/clerk-react";
+import useStoreUserEffect from "@/useStoreUserEffect";
 
 const drawerWidth = 240;
 
@@ -56,6 +57,7 @@ export default function ClippedDrawer({ Component }) {
   const [isMultipleFormOpen, setIsMultipleFormOpen] = useState(false);
   const [isLiveMultipleFormOpen, setIsLiveMultipleFormOpen] = useState(false);
   const { isAuthenticated, isLoading } = useConvexAuth();
+  const userId = useStoreUserEffect();
 
   const handleOptionLoginClick = () => {
     setIsOptionLoginOpen(!isOptionLoginOpen);
@@ -83,8 +85,8 @@ export default function ClippedDrawer({ Component }) {
   };
 
   const handleAddPlayList = async () => {
-    if (!isLogin) {
-      router.push("/");
+    if (!isAuthenticated) {
+      router.push("/sign-in");
       return;
     }
     setPlayLists([...playLists, "New PlayList#" + playLists.length]);
@@ -130,7 +132,6 @@ export default function ClippedDrawer({ Component }) {
       </ListItem>
     ));
 
-
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -149,7 +150,7 @@ export default function ClippedDrawer({ Component }) {
             aria-controls="menu-appbar"
             aria-haspopup="true"
             onClick={() => {
-              if (isLogin) {
+              if (isAuthenticated) {
                 handleOptionUploadClick();
               } else {
                 router.push("/");
@@ -158,45 +159,23 @@ export default function ClippedDrawer({ Component }) {
           >
             <VideoCallIcon />
           </IconButton>
-          {/* {!isLogin ?
-
-                        <IconButton
-                            style={{ marginLeft: "auto" }}
-                            size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
-                            aria-haspopup="true"
-                            onClick={() => {
-                                router.push("/");
-                            }}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
-                        :
-                        <Button style={{ marginLeft: "auto" }} onClick={handleOptionLoginClick}>
-                            <Avatar alt="Remy Sharp" src={image} sx={{ width: 24, height: 24 }} />
-                        </Button>
-                    } */}
           {isAuthenticated ? (
             <UserButton afterSignOutUrl="/" />
           ) : (
             <div>
-              <SignInButton>
-                <IconButton
-                  style={{ marginLeft: "auto" }}
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={() => {
-                    router.push("/");
-                  }}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-              </SignInButton>
+              <IconButton
+                style={{ marginLeft: "auto" }}
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={() => {
+                  router.push("/sign-in");
+                }}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
             </div>
           )}
         </Toolbar>
@@ -220,6 +199,7 @@ export default function ClippedDrawer({ Component }) {
             <ListItem key={"Create Playlist"} disablePadding>
               <ListItemButton
                 onClick={() => {
+                  console.log("clicked");
                   handleAddPlayList();
                 }}
               >
