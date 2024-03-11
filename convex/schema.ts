@@ -6,6 +6,8 @@ export default defineSchema({
     name: v.string(),
     description: v.string(),
     status: v.string(),
+    date: v.string(),
+    isOffline: v.boolean(),
     genre: v.array(v.id("genre")),
     xCoordinate: v.number(),
     yCoordinate: v.number(),

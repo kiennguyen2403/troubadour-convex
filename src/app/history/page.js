@@ -24,7 +24,7 @@ export default function History(props) {
         Recently Watched
       </Typography>
       <Grid container spacing={2}>
-        {tickets.length > 0 ? (
+        {tickets?.length > 0 ? (
           tickets.map((item) => (
             <Grid item xs={4}>
               {/* <VideoButton
@@ -61,7 +61,7 @@ export default function History(props) {
         Playlists
       </Typography>
       <Grid container spacing={2}>
-        {playlists.length > 0 ? (
+        {playlists?.length > 0 ? (
           playlists.map((item) => (
             <Grid item xs={4}>
               <VideoButton
@@ -86,8 +86,6 @@ export default function History(props) {
       </Grid>
     </Box>
   );
-
-  useEffect(() => {}, [library]);
 
   return <ClippedDrawer Component={[Recently, Playlist]} />;
 }

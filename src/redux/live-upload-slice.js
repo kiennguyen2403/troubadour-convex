@@ -6,6 +6,10 @@ export const liveUploadSlice = createSlice({
         title: "",
         description: "",
         genre: [],
+        location: "",
+        date: "",
+        file: "",
+        isOffline: false,
     },
     reducers: {
         setLiveTitle: (state, action) => {
@@ -16,6 +20,18 @@ export const liveUploadSlice = createSlice({
         },
         setLiveGenre: (state, action) => {
             state.genre = action.payload
+        },
+        setLiveLocation: (state, action) => {
+            state.location = action.payload
+        },
+        setLiveDate: (state, action) => {
+            state.date = action.payload
+        },
+        setFile: (state, action) => {
+            state.file = action.payload
+        },
+        setisOffline: (state, action) => {
+            state.isOffline = action.payload
         }
     }
 });

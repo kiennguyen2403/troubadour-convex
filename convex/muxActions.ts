@@ -22,7 +22,8 @@ export const createMuxEvent = action({
         ticketsNumber: v.number(),
         users: v.array(v.id("user")),
         comments: v.array(v.id("comment")),
-        eventUrl: v.string(),
+        date: v.optional(v.string()),
+        isOffline: v.boolean(),
     },
     handler: async (ctx, args) => {
         try {
@@ -44,6 +45,9 @@ export const createMuxEvent = action({
                     tickets.push(ticket);
             }
 
+            if (!args.date) 
+                args.date = new Date().toISOString();
+
             const result: any = await ctx.runMutation(internal.event.post, {
                 name: args.name,
                 description: args.description,
@@ -56,7 +60,9 @@ export const createMuxEvent = action({
                 users: args.users,
                 comments: args.comments,
                 streamKey: streamKey.stream_key,
-                eventUrl: args.eventUrl,
+                date: args.date,
+                isOffline: args.isOffline,
+                eventUrl: process.env.NEXT_PUBLIC_BASE_URL + "/event/" + streamKey.stream_key,
             });
 
             return result;

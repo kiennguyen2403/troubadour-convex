@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
+import Stack from "@mui/material/Stack";
 import AppBar from "@mui/material/AppBar";
 import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
@@ -44,6 +45,7 @@ import { currentUser } from "@clerk/nextjs";
 import { useConvexAuth } from "convex/react";
 import { SignIn } from "@clerk/clerk-react";
 import useStoreUserEffect from "@/convex/useStoreUserEffect";
+import { LiveExtra } from "./live-extra";
 
 const drawerWidth = 240;
 
@@ -67,6 +69,10 @@ export default function ClippedDrawer({ Component }) {
   };
 
   const handleOptionUploadClick = () => {
+    if (!isAuthenticated) {
+      router.push("/sign-in");
+      return;
+    }
     setIsOptionUploadOpen(!isOptionUploadOpen);
     if (!isOptionUploadOpen) {
       setIsOptionLoginOpen(false);
@@ -143,28 +149,28 @@ export default function ClippedDrawer({ Component }) {
           <Typography variant="h6" component="div">
             Troubadour
           </Typography>
-          <IconButton
-            style={{ marginLeft: "90%" }}
-            size="large"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={() => {
-              if (isAuthenticated) {
-                handleOptionUploadClick();
-              } else {
-                router.push("/");
-              }
-            }}
-          >
-            <VideoCallIcon />
-          </IconButton>
-          {isAuthenticated ? (
-            <UserButton afterSignOutUrl="/" />
-          ) : (
-            <div>
+          <div style={{ marginLeft: "auto", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <IconButton
+              sx={{ marginRight: "2rem" }}
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={() => {
+                if (isAuthenticated) {
+                  handleOptionUploadClick();
+                } else {
+                  router.push("/sign-in");
+                }
+              }}
+            >
+              <VideoCallIcon />
+            </IconButton>
+
+            {isAuthenticated ? (
+              <UserButton afterSignOutUrl="/" />
+            ) : (
               <IconButton
-                style={{ marginLeft: "auto" }}
                 size="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -176,8 +182,8 @@ export default function ClippedDrawer({ Component }) {
               >
                 <AccountCircle />
               </IconButton>
-            </div>
-          )}
+            )}
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -224,9 +230,6 @@ export default function ClippedDrawer({ Component }) {
         {Component.map((component, index) => component)}
       </Box>
       <MediaControl />
-      {isOptionLoginOpen ? (
-        <OptionLoginBox setIsOptionOpen={setIsOptionLoginOpen} />
-      ) : null}
       {isOptionUploadOpen ? (
         <OptionNewVideoBox
           setIsOptionOpen={setIsOptionUploadOpen}
@@ -240,12 +243,12 @@ export default function ClippedDrawer({ Component }) {
         component={[<UploadForm />, <MediaDetail />, <Confirm />]}
         steps={["Upload your file", "Provide information", "Confirm"]}
       />
-
+      
       <MultipleStepFormLive
         isOptionOpen={isLiveMultipleFormOpen}
         setIsOptionOpen={setIsLiveMultipleFormOpen}
-        component={[<LiveDetail />, <LiveConfirm />]}
-        steps={["Provide information", "Confirm"]}
+        component={[<LiveDetail />, <LiveExtra />, <LiveConfirm />]}
+        steps={["Provide information", "Extra Information", "Confirm"]}
       />
     </Box>
   );

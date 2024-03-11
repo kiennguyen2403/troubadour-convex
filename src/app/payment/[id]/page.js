@@ -21,32 +21,30 @@ import axios from "axios";
 import { useRouter } from 'next/navigation'
 import { selectToken } from "@/redux/auth-slice";
 import { useSelector } from "react-redux";
+import { api } from "../../../../convex/_generated/api";
+import { useAction } from "convex/react";
 
 export default function Payment({ params }) {
+
     const token = useSelector(selectToken);
     const id = params.id;
     const [isErrorDisplay, setIsErrorDisplay] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const buyTicket = useAction(api.ticket.buy);
     const router = useRouter();
 
     const handlePurchase = async () => {
         try {
             setIsLoading(true);
-            // const result = await axios.post(api.payment, {
-
-            // }, {
-            //     withCredentials: true,
-            //     headers: {
-            //         Accept: "application/json",
-            //         "Content-Type": "application/json",
-            //         "Access-Control-Allow-Origin": "*",
-            //         "Access-Control-Allow-Credentials": true,
-            //         Authorization: "Bearer " + token,
-            //     }
-            // });
-            console.log(result);
+            const result = await buyTicket({ id: id }, { token: token });
+            if (result.error) {
+                setIsLoading(false);
+                setIsErrorDisplay(true);
+                return;
+            }
+            router.push("event" + id);
             setIsLoading(false);
-            router.push("/home")
+
         } catch (error) {
             setIsLoading(false);
             console.log(error);

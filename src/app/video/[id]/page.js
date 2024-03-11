@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 
 export default function ({ params }) {
     const token = useSelector(selectToken);
-    const id = params.id;
+    const { id } = params;
 
     const Player = <CustomVideo playbackId={id} title="Text" description="Description" />
 

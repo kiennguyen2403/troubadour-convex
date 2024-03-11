@@ -6,7 +6,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Typography from "@mui/material/Typography";
-import CodeBlock from "./code-block";
+// import CodeBlock from "./code-block";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import IconButton from "@mui/material/IconButton";
 import axios from "axios";
-// import { api } from '../api/api';
+import { api } from "../../../convex/_generated/api";
 
 export default function MultipleStepFormLive({
   component,
