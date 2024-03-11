@@ -25,11 +25,11 @@ export default function OptionNewVideoBox({ setIsOptionOpen, setIsMultipleFormOp
         <Box sx={{
             width: '100%',
             maxWidth: 360,
-            bgcolor: '#525252',
+            bgcolor: '#19191A',
             position: "fixed",
             zIndex: 100000,
-            marginTop: "3%",
-            right: "6%",
+            marginTop: "2.3%",
+            right: "4%",
             borderRadius: "10px",
             boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.75)"
         }}>

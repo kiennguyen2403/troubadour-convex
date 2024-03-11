@@ -19,6 +19,8 @@ import {
 } from "../../redux/media-slice";
 import { selectMedias, selectCurrentMedia } from "../../redux/media-slice";
 import AudioButton from "../components/audio-button";
+import { api } from "../../../convex/_generated/api";
+import { useQuery } from "convex/react";
 
 export default function Home() {
   const token = useSelector(selectToken);
@@ -27,67 +29,11 @@ export default function Home() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
-  const [live, setLive] = useState([]);
-  const [custom, setCustom] = useState([]);
-  const [recent, setRecent] = useState([]);
-  const [top, setTop] = useState([]);
-
-  const getMedias = async () => {
-    try {
-      setIsLoading(true);
-      const top = await axios.get(api.media.top, {
-        withCredentials: true,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
-          Authorization: "Bearer " + token,
-        },
-      });
-      const recent = await axios.get(api.media.recent, {
-        withCredentials: true,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
-          Authorization: "Bearer " + token,
-        },
-      });
-
-      const live = await axios.get(api.media.live, {
-        withCredentials: true,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
-          Authorization: "Bearer " + token,
-        },
-      });
-
-      const custom = await axios.get(api.media.personal, {
-        withCredentials: true,
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Credentials": true,
-          Authorization: "Bearer " + token,
-        },
-      });
-      setIsLoading(false);
-      setCustom(custom.data);
-      setTop(top.data);
-      setRecent(recent.data);
-      setLive(live.data);
-    } catch (error) {
-      setIsLoading(false);
-      console.log(error);
-    }
-  };
-
+  const live = useQuery(api.event.get, {});
+  const custom = [];
+  const recent = [];
+  const top = [];
+  
   const getMedia = (videoID) => {
     router.push("/video/" + videoID);
   };
@@ -104,9 +50,7 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    getMedias();
-  }, []);
+
 
   const LiveStream = (
     <Box
@@ -123,7 +67,7 @@ export default function Home() {
         Live Events
       </Typography>
       <Grid container spacing={2}>
-        {live.length > 0 ? (
+        {live?.length > 0 ? (
           live.map((item) => (
             <Grid item xs={4}>
               <VideoButton

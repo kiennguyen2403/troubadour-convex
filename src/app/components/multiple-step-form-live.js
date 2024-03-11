@@ -6,7 +6,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import LoadingButton from "@mui/lab/LoadingButton";
 import Typography from "@mui/material/Typography";
-import CodeBlock from "./code-block";
+// import CodeBlock from "./code-block";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -16,13 +16,19 @@ import {
   selectLiveDescription,
   selectLiveGenre,
   selectLiveTitle,
+  selectFile,
+  selectisOffline,
+  selectLiveDate,
+  selectLiveLocation
+
 } from "../../redux/live-upload-slice";
 import { selectToken } from "../../redux/auth-slice";
 import { useRouter } from "next/navigation";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import IconButton from "@mui/material/IconButton";
 import axios from "axios";
-// import { api } from '../api/api';
+import { api } from "../../../convex/_generated/api";
+import { useAction } from "convex/react";
 
 export default function MultipleStepFormLive({
   component,
@@ -32,10 +38,15 @@ export default function MultipleStepFormLive({
 }) {
   const dispatch = useDispatch();
   const router = useRouter();
-  const token = useSelector(selectToken);
   const title = useSelector(selectLiveTitle);
   const description = useSelector(selectLiveDescription);
   const genre = useSelector(selectLiveGenre);
+  const file = useSelector(selectFile);
+  const isOffline = useSelector(selectisOffline);
+  const date = useSelector(selectLiveDate);
+  const location = useSelector(selectLiveLocation);
+
+  const createEvent = useAction(api.muxActions.createMuxEvent);
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
@@ -45,20 +56,19 @@ export default function MultipleStepFormLive({
   const handleUpload = async () => {
     try {
       setIsLoading(true);
-      // const res = await axios.post(api.media.live, {
-      //     title: title,
-      //     description: description,
-      //     genre: genre,
-      // }, {
-      //     withCredentials: true,
-      //     headers: {
-      //         Accept: "application/json",
-      //         "Content-Type": "application/json",
-      //         "Access-Control-Allow-Origin": "*",
-      //         "Access-Control-Allow-Credentials": true,
-      //         Authorization: "Bearer " + token,
-      //     }
-      // });
+      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`);
+      const lat = response.data.results[0].geometry.location.lat;
+      const lng = response.data.results[0].geometry.location.lng;
+      const res = await createEvent({
+        name: title,
+        description: description,
+        genre: genre,
+        isOffline: isOffline,
+        status: "planning",
+        date: date,
+        xCoordinate: lat,
+        yCoordinate: lng,
+      });
       setResult(res.data.stream_key);
     } catch (error) {
       console.log(error);

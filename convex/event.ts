@@ -12,9 +12,11 @@ export const post = internalMutation({
         description: v.string(),
         status: v.string(),
         genre: v.array(v.id("genre")),
+        isOffline: v.boolean(),
         xCoordinate: v.number(),
         yCoordinate: v.number(),
         ticketsNumber: v.number(),
+        date: v.string(),
         tickets: v.array(v.id("ticket")),
         users: v.array(v.id("user")),
         comments: v.array(v.id("comment")),
@@ -49,7 +51,7 @@ export const get = query({
 
 export const getById = query({
     args: {
-        id: v.id("event"),
+        id: v.string(),
     },
     handler: async (ctx, args) => {
         try {
@@ -107,6 +109,7 @@ export const update = internalMutation({
         id: v.id("event"),
         name: v.string(),
         description: v.string(),
+        isOffline: v.boolean(),
         status: v.string(),
         genre: v.array(v.id("genre")),
         xCoordinate: v.number(),
@@ -114,6 +117,7 @@ export const update = internalMutation({
         tickets: v.array(v.id("ticket")),
         users: v.array(v.id("user")),
         comments: v.array(v.id("comment")),
+        date: v.string(),
         streamKey: v.string(),
         eventUrl: v.string(),
     },
@@ -142,6 +146,7 @@ export const patch = internalMutation({
         users: v.optional(v.array(v.id("user"))),
         comments: v.optional(v.array(v.id("comment"))),
         eventUrl: v.optional(v.string()),
+        date: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
         try {
@@ -153,3 +158,35 @@ export const patch = internalMutation({
         }
     }
 });
+
+export const isUserPurchaseTicket = query({
+    args: {
+        eventID: v.string(),
+        userID: v.id("user"),
+    },
+    handler: async (ctx, { eventID, userID }) => {
+        try {
+            if (!eventID || !userID) return "No eventID or userID provided for isUserPurchaseTicket";
+            const event = await ctx.db
+                .query("event")
+                .filter((q) => q.eq(q.field('_id'), eventID))
+                .first();
+
+            if (!event) return false;
+
+            for (const ticketID of event.tickets) {
+                const ticket: any = await ctx.db
+                    .query("ticket")
+                    .filter((q) => q.eq(q.field('_id'), ticket))
+                    .first();
+                if (ticket.user === userID) return true;
+            }
+
+            return false;
+
+        } catch (e) {
+            console.log(e);
+            return "failure";
+        }
+    }
+})

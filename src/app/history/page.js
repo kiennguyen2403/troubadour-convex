@@ -5,26 +5,13 @@ import ClippedDrawer from "@/app/components/header";
 import { Grid, Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import VideoButton from "@/app/components/video-button";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 // import { api } from '../../api/api';
 
 export default function History(props) {
-  const [library, setLibrary] = useState([]);
-  const [playlists, setPlaylists] = useState([]);
-
-  const getLibrary = async () => {
-    try {
-      // const result = await axios.get();
-      setLibrary(result);
-    } catch (error) {}
-  };
-
-  const getMedias = async () => {
-    try {
-      // const result = await axios.get(api.media);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const tickets = useQuery(api.ticket.get, {});
+  const playlists = [];
 
   const Recently = (
     <Box>
@@ -37,15 +24,15 @@ export default function History(props) {
         Recently Watched
       </Typography>
       <Grid container spacing={2}>
-        {library.length > 0 ? (
-          library.map((item) => (
+        {tickets?.length > 0 ? (
+          tickets.map((item) => (
             <Grid item xs={4}>
-              <VideoButton
+              {/* <VideoButton
                 image={item.image}
                 title={item.title}
                 description={item.description}
                 eventHandler={getMedias}
-              />
+              /> */}
             </Grid>
           ))
         ) : (
@@ -74,7 +61,7 @@ export default function History(props) {
         Playlists
       </Typography>
       <Grid container spacing={2}>
-        {playlists.length > 0 ? (
+        {playlists?.length > 0 ? (
           playlists.map((item) => (
             <Grid item xs={4}>
               <VideoButton
@@ -99,8 +86,6 @@ export default function History(props) {
       </Grid>
     </Box>
   );
-
-  useEffect(() => {}, [library]);
 
   return <ClippedDrawer Component={[Recently, Playlist]} />;
 }

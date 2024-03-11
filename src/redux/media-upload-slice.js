@@ -20,7 +20,8 @@ export const mediaUploadSlice = createSlice({
         },
         setGenre: (state, action) => {
             state.genre = action.payload
-        }
+        },
+
     }
 });
 
