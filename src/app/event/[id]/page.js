@@ -40,16 +40,19 @@ export default function Event({ params }) {
 
     const Event =
         <Box>
-            <Typography variant="h1">{event?.name}</Typography>
-            <Typography variant="body1">{event?.description}</Typography>
-            <Button variant="contained" color="primary"
-                onClick={() => {
-                    try {
-                        useAction(api.muxActions.buyTicket, { id });
-                    } catch (error) {
-                        console.error(error);
-                    }
-                }}>Purchase ticket</Button>
+            <Stack spacing={2}>
+                <Image />
+                <Typography variant="h1">{event?.name}</Typography>
+                <Typography variant="body1">{event?.description}</Typography>
+                <Button variant="contained" color="primary"
+                    onClick={() => {
+                        try {
+                            useAction(api.muxActions.buyTicket, { id });
+                        } catch (error) {
+                            console.error(error);
+                        }
+                    }}>Purchase ticket</Button>
+            </Stack>
         </Box>
 
     return (

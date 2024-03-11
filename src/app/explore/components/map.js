@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { GoogleMap, useJsApiLoader, Marker, Circle, InfoWindow } from '@react-google-maps/api';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, Stack } from '@mui/material';
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 
@@ -133,9 +133,17 @@ function Map() {
                     onCloseClick={() => setInfoWindowOpen(false)}
                 >
                     <Box>
-                        <Typography variant="h6" component="h6">
-                            Hello, World!
-                        </Typography>
+                        <Stack direction="row" spacing={2}>
+                            <Typography variant="h6" component="h6">
+                                {events?.title}
+                            </Typography>
+                            <Typography variant="h6" component="h6">
+                                {events?.description}
+                            </Typography>
+                            <Typography variant="h6" component="h6">
+                                {events?.date}
+                            </Typography>
+                        </Stack>
                     </Box>
                 </InfoWindow>
             )}
