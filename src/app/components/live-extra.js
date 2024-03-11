@@ -2,22 +2,13 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Container, TextField, Stack, Chip, Typography } from "@mui/material";
-import { setFile, selectFile } from "../../redux/media-upload-slice";
 import { useSelector, useDispatch } from "react-redux";
 import {
-    setLiveTitle,
-    selectLiveTitle,
-    setLiveDescription,
-    selectLiveDescription,
+    setFile,
+    selectFile,
+    setLiveGenre,
+    selectLiveGenre,
 } from "../../redux/live-upload-slice";
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { useQueries } from "convex/react";
-import { api } from "../../../convex/_generated/api";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 
 export const LiveExtra = () => {
@@ -25,6 +16,7 @@ export const LiveExtra = () => {
     // const result = useQueries(api.genre.get, {})
     const genres = ["Jazz", "Acoustic"];
     const file = useSelector(selectFile);
+    const liveGenre = useSelector(selectLiveGenre);
     const dispatch = useDispatch();
 
     const handleFileChange = (event) => {
@@ -43,15 +35,6 @@ export const LiveExtra = () => {
 
         // Check if the file's MIME type is in the allowedTypes list
         return allowedTypes.includes(file.type);
-    };
-
-
-    const handleTitleChange = (event) => {
-        dispatch(setLiveTitle(event.target.value));
-    };
-
-    const handleDescriptionChange = (event) => {
-        dispatch(setLiveDescription(event.target.value));
     };
 
     return (
@@ -89,8 +72,7 @@ export const LiveExtra = () => {
                         label={"#" + genre}
                         variant={"filled"}
                         onClick={() => {
-                            // setSelectedTopics((prev) => prev.filter((t) => t !== topic));
-                            // postSelectedTopics(selectedTopics.filter((t) => t !== topic));
+                            dispatch(setLiveGenre([genre, ...liveGenre]));
                         }}
                         color="primary"
                     />))

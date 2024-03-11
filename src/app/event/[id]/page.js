@@ -8,6 +8,7 @@ import { api } from "../../../../convex/_generated/api";
 
 import { Box, Typography, Button, Stack, Chip, Card, CardContent, CardActions } from "@mui/material";
 import ClippedDrawer from "@/app/components/header";
+import useStoreUserEffect from "@/convex/useStoreUserEffect";
 
 
 const event = {
@@ -27,6 +28,8 @@ const event = {
 export default function Event({ params }) {
     const router = useRouter();
     const { id } = params;
+    const userId = useStoreUserEffect();
+    const isUserPurchase = useQuery(api.event.isUserPurchase, { id, userId });
     // const event = useQuery(api.event.getById, { id });
     // const buyTicket = useAction(api.muxActions.buyTicket, { id });
 
@@ -60,7 +63,7 @@ export default function Event({ params }) {
                 <Stack spacing={2}>
                     <Image style={{
                         borderRadius: "10px",
-                    }}/>
+                    }} />
                     <Typography variant="h3">{event?.name}</Typography>
                     <Typography variant="body1">{event?.description}</Typography>
                 </Stack>
@@ -117,20 +120,32 @@ export default function Event({ params }) {
                                 margin: "2%"
 
                             }}>
-                                <Button
-                                    sx={{
-                                        width: "100%"
-                                    }}
-                                    size="large"
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={async () => {
-                                        try {
-                                            router.push("/payment/" + event.id);
-                                        } catch (error) {
-                                            console.error(error);
-                                        }
-                                    }}>Purchase ticket</Button>
+                                {isUserPurchase ?
+                                    <Button
+                                        sx={{
+                                            width: "100%"
+                                        }}
+                                        size="large"
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={async () => {
+                                            try {
+                                                router.push("/payment/" + event.id);
+                                            } catch (error) {
+                                                console.error(error);
+                                            }
+                                        }}>Purchase ticket</Button>
+                                    : <Button
+                                        sx={{
+                                            width: "100%"
+                                        }}
+                                        size="large"
+                                        variant="contained"
+                                        color="primary"
+                                        onClick={async () => {
+                                            router.push("/event/" + event.id);
+                                        }}>View event</Button>
+                                }
                             </CardActions>
                         </Card>
                     </Box>

@@ -158,3 +158,35 @@ export const patch = internalMutation({
         }
     }
 });
+
+export const isUserPurchaseTicket = query({
+    args: {
+        eventID: v.string(),
+        userID: v.id("user"),
+    },
+    handler: async (ctx, { eventID, userID }) => {
+        try {
+            if (!eventID || !userID) return "No eventID or userID provided for isUserPurchaseTicket";
+            const event = await ctx.db
+                .query("event")
+                .filter((q) => q.eq(q.field('_id'), eventID))
+                .first();
+
+            if (!event) return false;
+
+            for (const ticketID of event.tickets) {
+                const ticket: any = await ctx.db
+                    .query("ticket")
+                    .filter((q) => q.eq(q.field('_id'), ticket))
+                    .first();
+                if (ticket.user === userID) return true;
+            }
+
+            return false;
+
+        } catch (e) {
+            console.log(e);
+            return "failure";
+        }
+    }
+})

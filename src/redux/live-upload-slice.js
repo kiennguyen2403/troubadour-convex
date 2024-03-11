@@ -36,11 +36,16 @@ export const liveUploadSlice = createSlice({
     }
 });
 
-export const { setLiveTitle, setLiveDescription, setLiveGenre } = liveUploadSlice.actions;
+export const { setLiveTitle, setLiveDescription, setLiveGenre, setLiveLocation, setLiveDate, setFile, setisOffline } = liveUploadSlice.actions;
 
 
 export const selectLiveTitle = (state) => state.liveUpload.title;
 export const selectLiveDescription = (state) => state.liveUpload.description;
 export const selectLiveGenre = (state) => state.liveUpload.genre;
+export const selectLiveLocation = (state) => state.liveUpload.location;
+export const selectLiveDate = (state) => state.liveUpload.date;
+export const selectFile = (state) => state.liveUpload.file;
+export const selectisOffline = (state) => state.liveUpload.isOffline;
+
 
 export default liveUploadSlice.reducer;

@@ -8,6 +8,14 @@ import {
   selectLiveTitle,
   setLiveDescription,
   selectLiveDescription,
+  setisOffline,
+  selectisOffline,
+  setLiveDate,
+  selectLiveDate,
+  setLiveLocation,
+  selectLiveLocation
+
+
 } from "../../redux/live-upload-slice";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -18,8 +26,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 export const LiveDetail = () => {
 
-  const mediaTitle = useSelector(selectLiveTitle);
-  const mediaDescription = useSelector(selectLiveDescription);
+  const title = useSelector(selectLiveTitle);
+  const description = useSelector(selectLiveDescription);
+  const date = useSelector(selectLiveDate);
+  const location = useSelector(selectLiveLocation);
+  const isOffline = useSelector(selectisOffline);
+
   const dispatch = useDispatch();
 
   const handleTitleChange = (event) => {
@@ -30,16 +42,18 @@ export const LiveDetail = () => {
     dispatch(setLiveDescription(event.target.value));
   };
 
-  const handleIsRecurringChange = (event) => {
-
+  const handleIsOfflineChange = (event) => {
+    console.log(event.target);
+    dispatch(setisOffline(event.target.checked));
   }
 
   const handleDateChange = (event) => {
 
+    dispatch(setLiveDate(event));
   }
 
   const handleLocationChange = (event) => {
-
+    dispatch(setLiveLocation(event.target.value));
   }
 
   return (
@@ -47,7 +61,7 @@ export const LiveDetail = () => {
       <TextField
         label="Event Title"
         variant="outlined"
-        value={mediaTitle}
+        value={title}
         onChange={handleTitleChange}
         fullWidth
         margin="normal"
@@ -55,7 +69,7 @@ export const LiveDetail = () => {
       <TextField
         label="Event Description"
         variant="outlined"
-        value={mediaDescription}
+        value={description}
         onChange={handleDescriptionChange}
         fullWidth
         margin="normal"
@@ -64,26 +78,31 @@ export const LiveDetail = () => {
       />
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker']}>
-          <DatePicker label="Basic date picker" />
+          <DatePicker
+            label="Basic date picker"
+            value={date}
+            onChange={handleDateChange}
+          />
         </DemoContainer>
       </LocalizationProvider>
       <FormControlLabel
         control={<Checkbox />}
+        value={isOffline}
         label="Is this a recurring event?"
-        onChange={() => {
-
-        }}
+        onChange={handleIsOfflineChange}
       />
 
-      <TextField
-        label="Event Location"
-        variant="outlined"
-        value={mediaDescription}
-        onChange={handleDescriptionChange}
-        fullWidth
-        margin="normal"
-        rows={4}
-      />
+      {isOffline ?
+        <TextField
+          label="Event Location"
+          variant="outlined"
+          value={location}
+          onChange={handleLocationChange}
+          fullWidth
+          margin="normal"
+          rows={4}
+        /> : null
+      }
 
 
     </Container>
