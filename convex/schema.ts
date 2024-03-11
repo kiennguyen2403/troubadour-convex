@@ -42,4 +42,36 @@ export default defineSchema({
     eventID: v.id("event"),
     likes: v.number(),
   }),
+  genre: defineTable({
+    name: v.string(),
+  }),
+  media: defineTable({
+    userId: v.id("user"),
+    otherUsers: v.array(v.id("user")),
+    genres: v.array(v.id("genre")),
+    name: v.string(),
+    dateTime: v.number(), // Note: This may be changed to updateTime later since _creationTime is default in convex schema
+    privacy: v.union(v.literal("public"), v.literal("private")),
+    fileUrl: v.string(),
+    storageId: v.id("_storage"),
+    comments: v.array(v.id("comments")),
+    views: v.number(),
+    likes: v.number(), // Note: In the future, likes should be a table with two PK: media and user.
+    characteristics: v.optional(
+      v.object({
+        tempo: v.number(),
+        pitch: v.number(),
+        // Others, for later vector searches for media
+      })
+    ),
+  }),
+  playlist: defineTable({
+    name: v.string(),
+    privacy: v.union(v.literal("public"), v.literal("private")),
+    dateTime: v.number(), // Note: This may be changed to updatedDate later since _creationTime is default in convex schema
+    userId: v.id("user"),
+    otherUsers: v.array(v.id("user")),
+    genres: v.array(v.id("genre")),
+    medias: v.array(v.id("media")),
+  }),
 });

@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { Id } from "../../convex/_generated/dataModel";
+import { useDispatch } from "react-redux";
+import { setUserID } from "@/redux/auth-slice";
 
 export default function useStoreUserEffect() {
   const { isAuthenticated } = useConvexAuth();
   const { user } = useUser();
+  const dispatch = useDispatch();
   // When this state is set we know the server
   // has stored the user.
   const [userId, setUserId] = useState<Id<"user"> | null>(null);
@@ -18,6 +21,7 @@ export default function useStoreUserEffect() {
     useEffect(() => {
       // If the user is not logged in don't do anything
       if (!isAuthenticated) {
+        dispatch(setUserID(null));
         return;
       }
       // Store the user in the database.
@@ -26,6 +30,7 @@ export default function useStoreUserEffect() {
       async function createUser() {
         const id = await storeUser({ role: "artist" });
         setUserId(id);
+        dispatch(setUserID(id));
       }
       createUser();
       return () => setUserId(null);
