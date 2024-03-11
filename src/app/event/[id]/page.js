@@ -29,7 +29,11 @@ export default function Event({ params }) {
     const router = useRouter();
     const { id } = params;
     const userId = useStoreUserEffect();
-    const isUserPurchase = useQuery(api.event.isUserPurchase, { id, userId });
+    console.log(userId + " " + id)
+    const isUserPurchase = useQuery(api.event.isUserPurchaseTicket, { 
+        eventID: id,
+        userID: userId
+     });
     // const event = useQuery(api.event.getById, { id });
     // const buyTicket = useAction(api.muxActions.buyTicket, { id });
 
@@ -120,7 +124,7 @@ export default function Event({ params }) {
                                 margin: "2%"
 
                             }}>
-                                {isUserPurchase ?
+                                {!isUserPurchase ?
                                     <Button
                                         sx={{
                                             width: "100%"
