@@ -16,6 +16,7 @@ import type {
 } from "convex/server";
 import type * as comment from "../comment.js";
 import type * as event from "../event.js";
+import type * as history from "../history.js";
 import type * as muxActions from "../muxActions.js";
 import type * as ticket from "../ticket.js";
 import type * as user from "../user.js";
@@ -31,6 +32,7 @@ import type * as user from "../user.js";
 declare const fullApi: ApiFromModules<{
   comment: typeof comment;
   event: typeof event;
+  history: typeof history;
   muxActions: typeof muxActions;
   ticket: typeof ticket;
   user: typeof user;

@@ -43,7 +43,7 @@ import { SignInButton, UserButton, auth } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs";
 import { useConvexAuth } from "convex/react";
 import { SignIn } from "@clerk/clerk-react";
-import useStoreUserEffect from "@/useStoreUserEffect";
+import useStoreUserEffect from "@/convex/useStoreUserEffect";
 
 const drawerWidth = 240;
 
@@ -140,7 +140,7 @@ export default function ClippedDrawer({ Component }) {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" component="div">
             Troubadour
           </Typography>
           <IconButton

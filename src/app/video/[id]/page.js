@@ -12,7 +12,7 @@ import { selectToken } from "@/redux/auth-slice";
 import { useSelector } from "react-redux";
 
 
-export default function Video({ params }) {
+export default function ({ params }) {
     const token = useSelector(selectToken);
     const id = params.id;
 

@@ -49,15 +49,34 @@ const circleOptions = {
 };
 
 function Map() {
+
     const [infoWindowOpen, setInfoWindowOpen] = useState(false);
+    const [center, setCenter] = useState(null);
     const [map, setMap] = useState(null)
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
     })
-
     const events = useQuery(api.event.get, {});
-    console.log(events);
+
+
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setCenter({
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    });
+                },
+                (error) => {
+                    console.error('Error getting user location:', error);
+                }
+            );
+        } else {
+            console.error('Geolocation is not supported by your browser.');
+        }
+    }, []);
 
 
     const onLoad = useCallback(function callback(map) {
@@ -76,7 +95,7 @@ function Map() {
         <GoogleMap
             mapContainerStyle={containerStyle}
             center={center}
-            zoom={10}
+            zoom={center ? 15 : 1}
             onLoad={onLoad}
             onUnmount={onUnmount}
             options={{
@@ -90,16 +109,22 @@ function Map() {
         >
             {
                 events?.map((event) => {
-                    return <Marker
-                        key={event.id}
-                        position={{
-                            lat: event.xCoordinate,
-                            lng: event.yCoordinate
-                        }}
-                        onClick={(e)=>{
-                            setInfoWindowOpen(!infoWindowOpen);
-                        }}
-                    />
+                    return (
+                        <>
+                            <Marker
+                                key={event.id}
+                                position={{
+                                    lat: event.xCoordinate,
+                                    lng: event.yCoordinate
+                                }}
+                                onClick={(e) => {
+                                    setInfoWindowOpen(!infoWindowOpen);
+                                }} />
+                            <Circle>
+                                center={center}
+                                options={circleOptions}
+                            </Circle>
+                        </>);
                 })
             }
             {infoWindowOpen && (

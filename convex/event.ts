@@ -49,7 +49,7 @@ export const get = query({
 
 export const getById = query({
     args: {
-        id: v.id("event"),
+        id: v.string(),
     },
     handler: async (ctx, args) => {
         try {

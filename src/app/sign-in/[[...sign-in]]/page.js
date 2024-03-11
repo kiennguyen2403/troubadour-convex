@@ -1,7 +1,7 @@
 "use client";
 import { Stack } from "@mui/material";
 import { SignIn } from "@clerk/clerk-react";
-import useStoreUserEffect from "@/useStoreUserEffect";
+import useStoreUserEffect from "@/convex/useStoreUserEffect";
 
 export default function Page() {
   return (

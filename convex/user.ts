@@ -10,7 +10,7 @@ export const GetAll = query({
 });
 
 export const GetByID = query({
-  args: { id: v.id("user") },
+  args: { id: v.string() },
   handler: async (ctx, { id }) => {
     try {
       const users = await ctx.db
