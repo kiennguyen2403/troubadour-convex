@@ -1,5 +1,6 @@
 "use node";
 import Mux from "@mux/mux-node";
+import Stripe from 'stripe';
 import axios from "axios";
 import {
   query,
@@ -15,11 +16,14 @@ import { v } from "convex/values";
 import { env } from "process";
 import process from "process";
 
+
 const { video } = new Mux({
   tokenId: "d65d514a-06c6-4fd3-803f-5d3aea75889f",
   tokenSecret:
     "8iEJtQyTMXv0JMn8vuIUYFdZlc9lvW3AsuUf72jWK8jIw6jsoDl1Mqk5FsW4Qv9ldFs5YmK2AOb",
 });
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "no key");
 
 export const createMuxEvent = action({
   args: {
@@ -174,8 +178,13 @@ export const buyTicket: any = action({
   args: {
     id: v.id("event"),
     user: v.id("user"),
+    cardNumber: v.string(),
+    cvc: v.string(),
+    exp_month: v.number(),
+    exp_year: v.number(),
+    cardHolder: v.string(),
   },
-  handler: async (ctx, { id, user }) => {
+  handler: async (ctx, { id, user, cardNumber, cvc, exp_month, exp_year, cardHolder }) => {
     try {
       const event = await ctx.runQuery(api.event.getById, { id: id });
       if (
@@ -201,6 +210,26 @@ export const buyTicket: any = action({
       }
 
       if (!ticketId) return "failure";
+
+      const paymentMethod = await stripe.paymentMethods.create({
+        type: 'card',
+        card: {
+          number: cardNumber,
+          cvc: cvc,
+          exp_month: exp_month, // Replace with the expiration month of the card
+          exp_year: exp_year // Replace with the expiration year of the card
+        },
+        billing_details: {
+          name: cardHolder
+        }
+      });
+
+      await stripe.paymentIntents.create({
+        amount: 1000,
+        currency: "usd",
+        payment_method: paymentMethod.id,
+        payment_method_types: ["card"],
+      });
 
       return await ctx.runMutation(internal.ticket.patch, {
         id: ticketId,

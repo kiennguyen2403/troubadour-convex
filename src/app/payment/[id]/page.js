@@ -25,18 +25,19 @@ import { api } from "../../../../convex/_generated/api";
 import { useAction } from "convex/react";
 
 export default function Payment({ params }) {
-
     const token = useSelector(selectToken);
     const id = params.id;
     const [isErrorDisplay, setIsErrorDisplay] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const buyTicket = useAction(api.ticket.buy);
+    const buyTicket = useAction(api.muxActions.buyTicket);
     const router = useRouter();
 
     const handlePurchase = async () => {
         try {
             setIsLoading(true);
-            const result = await buyTicket({ id: id }, { token: token });
+            const result = await buyTicket({
+            });
+            
             if (result.error) {
                 setIsLoading(false);
                 setIsErrorDisplay(true);

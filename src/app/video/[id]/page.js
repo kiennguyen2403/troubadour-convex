@@ -23,9 +23,7 @@ export default function ({ params }) {
 
     if (!isUserPurchaseTicket && userId != null) router.push("/event/" + id);
 
-
     const Player = <CustomVideo playbackId={id} title="Text" description="Description" />
-
 
     return (
         <ClippedDrawer Component={[Player]} />
