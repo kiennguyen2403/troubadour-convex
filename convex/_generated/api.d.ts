@@ -21,9 +21,6 @@ import type * as history from "../history.js";
 import type * as media from "../media.js";
 import type * as muxActions from "../muxActions.js";
 import type * as playlist from "../playlist.js";
-import type * as schemas_genreSchema from "../schemas/genreSchema.js";
-import type * as schemas_mediaSchema from "../schemas/mediaSchema.js";
-import type * as schemas_playlistSchema from "../schemas/playlistSchema.js";
 import type * as ticket from "../ticket.js";
 import type * as user from "../user.js";
 
@@ -43,9 +40,6 @@ declare const fullApi: ApiFromModules<{
   media: typeof media;
   muxActions: typeof muxActions;
   playlist: typeof playlist;
-  "schemas/genreSchema": typeof schemas_genreSchema;
-  "schemas/mediaSchema": typeof schemas_mediaSchema;
-  "schemas/playlistSchema": typeof schemas_playlistSchema;
   ticket: typeof ticket;
   user: typeof user;
 }>;
