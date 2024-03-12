@@ -18,10 +18,10 @@ export default function ({ params }) {
     const userId = useStoreUserEffect();
     const isUserPurchaseTicket = useQuery(api.event.isUserPurchaseTicket, { 
         eventID: id, 
-        userID: userId 
+        userID: userId ?? ""
     });
 
-    if (!isUserPurchaseTicket) router.push("/event/" + id);
+    if (!isUserPurchaseTicket && userId != null) router.push("/event/" + id);
 
 
     const Player = <CustomVideo playbackId={id} title="Text" description="Description" />

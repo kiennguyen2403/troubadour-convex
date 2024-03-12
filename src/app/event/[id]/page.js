@@ -42,7 +42,7 @@ export default function Event({ params }) {
   console.log(userId + " " + id);
   const isUserPurchase = useQuery(api.event.isUserPurchaseTicket, {
     eventID: id,
-    userID: userId,
+    userID: userId ?? "",
   });
   // const event = useQuery(api.event.getById, { id });
   // const buyTicket = useAction(api.muxActions.buyTicket, { id });
