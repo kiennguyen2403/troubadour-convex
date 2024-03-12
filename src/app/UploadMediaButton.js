@@ -6,17 +6,13 @@ import { api } from "../../convex/_generated/api";
 import React, { useState, useRef } from "react";
 import { Id } from "../../convex/_generated/dataModel";
 
-const enum Privacy {
-  Public = "public",
-  Private = "private",
-}
 const sampleMediaData = {
-  user: "jn70cn957crtx61qvh6wm1nv4d6mxfnz" as Id<"user">,
+  user: "jn70cn957crtx61qvh6wm1nv4d6mxfnz",
   otherUsers: [],
-  genres: ["jd71d9kyxbzhfvrp96bqbrwmxh6mwwr3" as Id<"genre">],
+  genres: ["jd71d9kyxbzhfvrp96bqbrwmxh6mwwr3"],
   name: "Best Hiphop",
   dateTime: 100,
-  privacy: Privacy.Public,
+  privacy: "public",
   comments: [],
   views: 0,
   likes: 0,
@@ -28,8 +24,8 @@ export function UploadMediaButton() {
   const generateUploadUrl = useMutation(api.media.generateUploadUrl);
   const getMediaUrl = useMutation(api.media.getMediaUrl);
   const saveMedia = useMutation(api.media.post);
-  const saveAfterUpload = async (uploaded: UploadFileResponse[]) => {
-    const storageId = (uploaded[0].response as any).storageId;
+  const saveAfterUpload = async (uploaded) => {
+    const storageId = (uploaded[0].response).storageId;
     const fileUrl = await getMediaUrl({ storageId });
     await saveMedia({
       ...sampleMediaData,
@@ -55,7 +51,7 @@ export function UploadMediaButton() {
       <input
         type="file"
         ref={mediaInput}
-        onChange={(event) => setSelectedMedia(event.target.files![0])}
+        onChange={(event) => setSelectedMedia(event.target.files[0])}
       />
       <input type="submit" value="Submit" disabled={selectedMedia === null || isUploading} />
     </form>
