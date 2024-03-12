@@ -16,8 +16,11 @@ import type {
 } from "convex/server";
 import type * as comment from "../comment.js";
 import type * as event from "../event.js";
+import type * as genre from "../genre.js";
 import type * as history from "../history.js";
+import type * as media from "../media.js";
 import type * as muxActions from "../muxActions.js";
+import type * as playlist from "../playlist.js";
 import type * as ticket from "../ticket.js";
 import type * as user from "../user.js";
 
@@ -32,8 +35,11 @@ import type * as user from "../user.js";
 declare const fullApi: ApiFromModules<{
   comment: typeof comment;
   event: typeof event;
+  genre: typeof genre;
   history: typeof history;
+  media: typeof media;
   muxActions: typeof muxActions;
+  playlist: typeof playlist;
   ticket: typeof ticket;
   user: typeof user;
 }>;
