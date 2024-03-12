@@ -11,22 +11,59 @@ import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useSelector } from "react-redux";
 import { selectUserID } from "@/redux/auth-slice";
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 
 export default function ({ params }) {
     const { id } = params;
     const router = useRouter();
     const userId = useSelector(selectUserID);
-    const isUserPurchaseTicket = useQuery(api.event.isUserPurchaseTicket, { 
-        eventID: id, 
+    const isUserPurchaseTicket = useQuery(api.event.isUserPurchaseTicket, {
+        eventID: id,
         userID: userId ?? ""
     });
 
-    if (!isUserPurchaseTicket && !userId) router.push("/event/" + id);
 
-    const Player = <CustomVideo playbackId={id} title="Text" description="Description" />
+    const player = <CustomVideo playbackId={id} title="Text" description="Description" />
 
-    return (
-        <ClippedDrawer Component={[Player]} />
-    );
+    const dialog =
+        <Dialog
+            open={true}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description">
+            <DialogTitle id="alert-dialog-title">
+                {"You have not purchased a ticket for this event."}
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    This event is only available to ticket holders.
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => {
+                    router.push("/");
+                }}>Back to Home</Button>
+                <Button onClick={() => {
+                    router.push("/event/" + id)
+                }}>
+                    Purchase Ticket
+                </Button>
+            </DialogActions>
+        </Dialog>
+
+        console.log(isUserPurchaseTicket);
+    if (!isUserPurchaseTicket)
+        return(
+            <ClippedDrawer Component={[player, dialog]} />
+        )
+   
+    else 
+        return (
+            <ClippedDrawer Component={[player]} />
+        );
 }

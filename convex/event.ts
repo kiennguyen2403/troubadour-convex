@@ -162,7 +162,7 @@ export const isUserPurchaseTicket = query({
   handler: async (ctx, { eventID, userID }) => {
     try {
       if (!eventID || !userID)
-        return "No eventID or userID provided for isUserPurchaseTicket";
+        return false;
       const event = await ctx.db
         .query("event")
         .filter((q) => q.eq(q.field("_id"), eventID))
@@ -173,7 +173,7 @@ export const isUserPurchaseTicket = query({
       for (const ticketID of event.tickets) {
         const ticket: any = await ctx.db
           .query("ticket")
-          .filter((q) => q.eq(q.field("_id"), ticket))
+          .filter((q) => q.eq(q.field("_id"), ticketID))
           .first();
         if (ticket.user === userID) return true;
       }
