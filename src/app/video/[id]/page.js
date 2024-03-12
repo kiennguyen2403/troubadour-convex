@@ -22,7 +22,7 @@ export default function ({ params }) {
         userID: userId ?? ""
     });
 
-    if (!isUserPurchaseTicket && userId != null) router.push("/event/" + id);
+    if (!isUserPurchaseTicket && !userId) router.push("/event/" + id);
 
     const Player = <CustomVideo playbackId={id} title="Text" description="Description" />
 

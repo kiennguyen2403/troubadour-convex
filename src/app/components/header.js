@@ -50,8 +50,6 @@ import { LiveExtra } from "./live-extra";
 const drawerWidth = 240;
 
 export default function ClippedDrawer({ Component }) {
-  const isLogin = useSelector(selectAuth);
-  const image = useSelector(selectImage);
   const router = useRouter();
   const [playLists, setPlayLists] = useState([]);
   const [isOptionLoginOpen, setIsOptionLoginOpen] = useState(false);
@@ -59,7 +57,6 @@ export default function ClippedDrawer({ Component }) {
   const [isMultipleFormOpen, setIsMultipleFormOpen] = useState(false);
   const [isLiveMultipleFormOpen, setIsLiveMultipleFormOpen] = useState(false);
   const { isAuthenticated, isLoading } = useConvexAuth();
-  const userId = useStoreUserEffect();
 
   const handleOptionLoginClick = () => {
     setIsOptionLoginOpen(!isOptionLoginOpen);
@@ -80,14 +77,14 @@ export default function ClippedDrawer({ Component }) {
   };
 
   const getPlayLists = async () => {
-    try {
-      const result = await axios.get(api.media);
-      if (result) {
-        setPlayLists(result.data.playlists);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const result = await axios.get(api.media);
+    //   if (result) {
+    //     setPlayLists(result.data.playlists);
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const handleAddPlayList = async () => {

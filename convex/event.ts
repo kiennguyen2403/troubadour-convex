@@ -157,7 +157,7 @@ export const patch = internalMutation({
 export const isUserPurchaseTicket = query({
   args: {
     eventID: v.string(),
-    userID: v.id("user"),
+    userID: v.string(),
   },
   handler: async (ctx, { eventID, userID }) => {
     try {

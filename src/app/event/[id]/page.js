@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CalendarMonth, Image, LockClock, Room } from "@mui/icons-material";
-
+import { Divider } from "@mui/material";
 import { useAction, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 
@@ -41,7 +41,7 @@ export default function Event({ params }) {
   const userId = useSelector(selectUserID);
   console.log(userId + " " + id);
   const isUserPurchase = useQuery(api.event.isUserPurchaseTicket, {
-    eventID: id,
+    eventID: id ?? "",
     userID: userId ?? "",
   });
   // const event = useQuery(api.event.getById, { id });
@@ -97,6 +97,7 @@ export default function Event({ params }) {
           <Typography variant="h3">{event?.name}</Typography>
           <Typography variant="body1">{event?.description}</Typography>
         </Stack>
+        <Divider />
         <Stack spacing={50} direction="row">
           <Stack spacing={2}>
             <Stack spacing={2}>
@@ -141,7 +142,9 @@ export default function Event({ params }) {
               width: "30%",
             }}
           >
-            <Card>
+            <Card sx={{
+              marginLeft: "auto",
+            }}>
               <CardContent>
                 <Typography variant="h5">Tickets</Typography>
                 <Typography variant="body1">{"$ " + event?.price}</Typography>
