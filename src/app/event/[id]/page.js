@@ -39,7 +39,6 @@ export default function Event({ params }) {
   const router = useRouter();
   const { id } = params;
   const userId = useSelector(selectUserID);
-  console.log(userId + " " + id);
   const isUserPurchase = useQuery(api.event.isUserPurchaseTicket, {
     eventID: id ?? "",
     userID: userId ?? "",
@@ -144,6 +143,7 @@ export default function Event({ params }) {
           >
             <Card sx={{
               marginLeft: "auto",
+              position: "sticky",
             }}>
               <CardContent>
                 <Typography variant="h5">Tickets</Typography>
