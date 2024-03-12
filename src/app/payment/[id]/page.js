@@ -3,12 +3,7 @@ import { React, useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Container } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import LoadingButton from '@mui/lab/LoadingButton';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -16,28 +11,41 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import InputAdornment from '@mui/material/InputAdornment';
 import TodayIcon from '@mui/icons-material/Today';
 import LockIcon from '@mui/icons-material/Lock';
-import axios from "axios";
-// import { api } from "../../api/api";
 import { useRouter } from 'next/navigation'
-import { selectToken } from "@/redux/auth-slice";
 import { useSelector } from "react-redux";
+import { selectUserID } from "@/redux/auth-slice";
 import { api } from "../../../../convex/_generated/api";
-import { useAction } from "convex/react";
+import { useAction, useQuery } from "convex/react";
 
 export default function Payment({ params }) {
-    const token = useSelector(selectToken);
+
     const id = params.id;
     const [isErrorDisplay, setIsErrorDisplay] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [cardNumber, setCardNumber] = useState("");
+    const [expiryDate, setExpiryDate] = useState("");
+    const [cvv, setCvv] = useState("");
+    const [cardHolder, setCardHolder] = useState("");
+    const event = useQuery(api.event.getById, { id });
+    const userId = useSelector(selectUserID);
     const buyTicket = useAction(api.muxActions.buyTicket);
     const router = useRouter();
 
     const handlePurchase = async () => {
         try {
+            const exp_month = expiryDate.split("/")[0];
+            const exp_year = expiryDate.split("/")[1];
             setIsLoading(true);
             const result = await buyTicket({
+                id: event.id,
+                user: userId,
+                cardNumber: cardNumber,
+                cvc: cvc,
+                exp_month: exp_month,
+                exp_year: exp_year,
+                cardHolder: cardHolder
             });
-            
+
             if (result.error) {
                 setIsLoading(false);
                 setIsErrorDisplay(true);
@@ -100,6 +108,8 @@ export default function Payment({ params }) {
                         id="Card Number"
                         label="Card Number"
                         name="cardnumber"
+                        value={cardNumber}
+                        onChange={(e) => setCardNumber(e.target.value)}
                         autoComplete="off"
                         autoFocus
                     />
@@ -117,6 +127,8 @@ export default function Payment({ params }) {
                             id="Expiry Date"
                             label="Expiry Data"
                             placeholder="mm/yy"
+                            value={expiryDate}
+                            onChange={(e) => setExpiryDate(e.target.value)}
                             name="Expiry Date"
                         />
                         <TextField
@@ -132,6 +144,9 @@ export default function Payment({ params }) {
                             id="CVV"
                             name="CVV"
                             placeholder="XXX"
+                            value={cvv}
+                            onChange={(e) => setCvv(e.target.value)}
+                            autoComplete="off"
                             margin="normal" />
                     </div>
                     <TextField
@@ -150,7 +165,8 @@ export default function Payment({ params }) {
                         name="Name on Card"
                         placeholder="Name on Card"
                         autoComplete="off"
-
+                        value={cardHolder}
+                        onChange={(e) => setCardHolder(e.target.value)}
                     />
 
                     <LoadingButton
