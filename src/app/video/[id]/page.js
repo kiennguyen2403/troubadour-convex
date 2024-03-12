@@ -9,13 +9,14 @@ import CustomVideo from "@/app/components/video";
 import { useRouter } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import useStoreUserEffect from "@/convex/useStoreUserEffect";
+import { useSelector } from "react-redux";
+import { selectUserID } from "@/redux/auth-slice";
 
 
 export default function ({ params }) {
     const { id } = params;
     const router = useRouter();
-    const userId = useStoreUserEffect();
+    const userId = useSelector(selectUserID);
     const isUserPurchaseTicket = useQuery(api.event.isUserPurchaseTicket, { 
         eventID: id, 
         userID: userId ?? ""
