@@ -29,7 +29,22 @@ export const post = internalMutation({
   },
   handler: async (ctx, args) => {
     try {
-      return await ctx.db.insert("event", args);
+      return await ctx.db.insert("event", {
+        name: args.name,
+        description: args.description,
+        status: args.status,
+        genre: args.genre,
+        isOffline: args.isOffline,
+        xCoordinate: args.xCoordinate,
+        yCoordinate: args.yCoordinate,
+        tickets: args.tickets,
+        users: args.users,
+        comments: args.comments,
+        date: args.date,
+        views: 0,
+        streamKey: args.streamKey,
+        eventUrl: args.eventUrl,
+      });
     } catch (e) {
       console.log(e);
       return "failure";
@@ -84,6 +99,42 @@ export const getByGenres = query({
   },
 });
 
+export const getByName = query({
+  args: {
+    name: v.string(),
+  },
+  handler: async (ctx, { name }) => {
+    try {
+      if (!name) return "No name provided for event get by name";
+      return await ctx.db
+        .query("event")
+        .filter((q) => q.eq(q.field("name"), name))
+        .collect();
+    } catch (e) {
+      console.log(e);
+      return "failure";
+    }
+  },
+});
+
+export const getOfflineEvents = query({
+  args: {
+
+  },
+  handler: async (ctx, ) => {
+    try {
+      return await ctx.db
+      .query("event")
+      .filter((q) => q.eq(q.field("isOffline"), true))
+      .collect();
+    } catch (e) {
+      console.log(e);
+      return "failure";
+    }
+  }
+});
+
+
 export const deleteByID = internalMutation({
   args: {
     id: v.id("event"),
@@ -109,6 +160,7 @@ export const update = internalMutation({
     genre: v.array(v.id("genre")),
     xCoordinate: v.number(),
     yCoordinate: v.number(),
+    views: v.number(),
     tickets: v.array(v.id("ticket")),
     users: v.array(v.id("user")),
     comments: v.array(v.id("comment")),
