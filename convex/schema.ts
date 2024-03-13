@@ -14,6 +14,7 @@ export default defineSchema({
     tickets: v.array(v.id("ticket")),
     users: v.array(v.id("user")),
     comments: v.array(v.id("comment")),
+    views: v.number(),
     streamKey: v.string(),
     eventUrl: v.string(),
   }),
