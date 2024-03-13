@@ -21,31 +21,19 @@ import useStoreUserEffect from "@/convex/useStoreUserEffect";
 import { useSelector } from "react-redux";
 import { selectUserID } from "@/redux/auth-slice";
 
-const event = {
-  id: 1,
-  name: "Event Name",
-  description: "Event Description",
-  status: "active",
-  genre: ["Music", "Jazz"],
-  xCoordinate: 0,
-  yCoordinate: 0,
-  tickets: [],
-  date: "2022-12-12",
-  users: ["user1", "user2"],
-  image: "https://via.placeholder.com/150",
-};
+
 
 export default function Event({ params }) {
   const router = useRouter();
   const { id } = params;
   const userId = useSelector(selectUserID);
+  console.log("userId:" + userId);
   const isUserPurchase = useQuery(api.event.isUserPurchaseTicket, {
     eventID: id ?? "",
-    userID: userId ?? "",
+    userID: userId ?? "jd7287bzyqv5smd4365qdfv6e56n1ahd",
   });
-  // const event = useQuery(api.event.getById, { id });
-  // const buyTicket = useAction(api.muxActions.buyTicket, { id });
-
+  const event = useQuery(api.event.getById, { id });
+  const genres = ["Jazz", "Outdoor"]
   const noEvent = (
     <Box>
       <Stack
@@ -105,6 +93,13 @@ export default function Event({ params }) {
                 <CalendarMonth />
                 <Typography variant="body1"> {event?.date}</Typography>
               </Stack>
+
+              <Stack spacing={1} direction="row">
+                <LockClock />
+                <Typography variant="body1">
+                  {event?.duration || "N/A"}{" "}
+                </Typography>
+              </Stack>
             </Stack>
 
             <Stack spacing={2}>
@@ -117,20 +112,11 @@ export default function Event({ params }) {
 
             <Stack spacing={2}>
               <Typography variant="h5">About this event</Typography>
+              <Typography variant="body2">
+                {event?.description}
+              </Typography>
               <Stack spacing={1} direction="row">
-                <CalendarMonth />
-                <Typography variant="body1"> {event?.date}</Typography>
-              </Stack>
-
-              <Stack spacing={1} direction="row">
-                <LockClock />
-                <Typography variant="body1">
-                  {event?.duration || "N/A"}{" "}
-                </Typography>
-              </Stack>
-
-              <Stack spacing={1} direction="row">
-                {event.genre.map((genre) => {
+                {genres.map((genre) => {
                   return <Chip label={"#" + genre} />;
                 })}
               </Stack>
@@ -166,7 +152,7 @@ export default function Event({ params }) {
                     color="primary"
                     onClick={async () => {
                       try {
-                        router.push("/payment/" + event.id);
+                        router.push("/payment/" + event._id);
                       } catch (error) {
                         console.error(error);
                       }
@@ -183,7 +169,7 @@ export default function Event({ params }) {
                     variant="contained"
                     color="primary"
                     onClick={async () => {
-                      router.push("/event/" + event.id);
+                      router.push("/event/" + event._id);
                     }}
                   >
                     View event

@@ -75,8 +75,7 @@ export default function Home() {
                 title={item.title}
                 description={item.description}
                 eventHandler={() => {
-                  console.log("Video:" + item.playbackId);
-                  getMedia(item.playbackId);
+                  getMedia(item._id);
                 }}
               />
             </Grid>

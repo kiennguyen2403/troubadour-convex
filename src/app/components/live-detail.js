@@ -13,9 +13,11 @@ import {
   setLiveDate,
   selectLiveDate,
   setLiveLocation,
-  selectLiveLocation
-
-
+  selectLiveLocation,
+  selectTicketPrice,
+  selectTicketsNumber,
+  setTicketPrice,
+  setTicketsNumber,
 } from "../../redux/live-upload-slice";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -31,6 +33,8 @@ export const LiveDetail = () => {
   const date = useSelector(selectLiveDate);
   const location = useSelector(selectLiveLocation);
   const isOffline = useSelector(selectisOffline);
+  const ticketPrice = useSelector(selectTicketPrice);
+  const ticketsNumber = useSelector(selectTicketsNumber);
 
   const dispatch = useDispatch();
 
@@ -56,6 +60,15 @@ export const LiveDetail = () => {
     dispatch(setLiveLocation(event.target.value));
   }
 
+  const handleTicketPriceChange = (event) => {
+    dispatch(setTicketPrice(event.target.value));
+  }
+
+  const handleTicketsNumberChange = (event) => {
+    dispatch(setTicketsNumber(event.target.value));
+  }
+
+
   return (
     <Container>
       <TextField
@@ -76,6 +89,24 @@ export const LiveDetail = () => {
         multiline
         rows={4}
       />
+
+      <TextField
+        label="Ticket Price"
+        variant="outlined"
+        value={ticketPrice}
+        onChange={handleTicketPriceChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
+        label="Number of Tickets"
+        variant="outlined"
+        value={ticketsNumber}
+        onChange={handleTicketsNumberChange}
+        fullWidth
+        margin="normal"
+      />
+
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DemoContainer components={['DatePicker']}>
           <DatePicker
@@ -88,7 +119,7 @@ export const LiveDetail = () => {
       <FormControlLabel
         control={<Checkbox />}
         value={isOffline}
-        label="Is this a recurring event?"
+        label="Is this an offline event?"
         onChange={handleIsOfflineChange}
       />
 

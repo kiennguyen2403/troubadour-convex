@@ -38,6 +38,7 @@ export const createMuxEvent = action({
     comments: v.array(v.id("comment")),
     date: v.optional(v.string()),
     isOffline: v.boolean(),
+    price: v.number(),
   },
   handler: async (ctx, args) => {
     try {
@@ -48,11 +49,12 @@ export const createMuxEvent = action({
         },
       });
 
+  
       let tickets: Id<"ticket">[] = [];
       for (let i = 0; i < args.ticketsNumber; i++) {
         const ticket = await ctx.runMutation(internal.ticket.post, {
           name: `Ticket ${i + 1}`,
-          fee: 0,
+          fee: args.price,
         });
         if (typeof ticket !== "string") tickets.push(ticket);
       }
@@ -74,10 +76,10 @@ export const createMuxEvent = action({
         date: args.date,
         isOffline: args.isOffline,
         eventUrl:
-          process.env.NEXT_PUBLIC_BASE_URL + "/event/" + streamKey.stream_key,
+          process.env.NEXT_PUBLIC_BASE_URL + "/event/" + streamKey.id,
       });
 
-      return result;
+      return streamKey.id;
     } catch (e) {
       console.log(e);
       return "failure";

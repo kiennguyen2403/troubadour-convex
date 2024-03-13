@@ -19,8 +19,9 @@ import {
   selectFile,
   selectisOffline,
   selectLiveDate,
-  selectLiveLocation
-
+  selectLiveLocation,
+  selectTicketPrice,
+  selectTicketsNumber,
 } from "../../redux/live-upload-slice";
 import { selectToken } from "../../redux/auth-slice";
 import { useRouter } from "next/navigation";
@@ -45,6 +46,8 @@ export default function MultipleStepFormLive({
   const isOffline = useSelector(selectisOffline);
   const date = useSelector(selectLiveDate);
   const location = useSelector(selectLiveLocation);
+  const price = useSelector(selectTicketPrice);
+  const ticketsNumber = useSelector(selectTicketsNumber);
 
   const createEvent = useAction(api.muxActions.createMuxEvent);
 
@@ -56,20 +59,27 @@ export default function MultipleStepFormLive({
   const handleUpload = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`);
-      const lat = response.data.results[0].geometry.location.lat;
-      const lng = response.data.results[0].geometry.location.lng;
+      // const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`);
+      // const lat = response.data.results[0].geometry.location.lat;
+      // const lng = response.data.results[0].geometry.location.lng;
+      const lat = -37.8102;
+      const lng = 144.9628;
       const res = await createEvent({
         name: title,
         description: description,
-        genre: genre,
-        isOffline: isOffline,
-        status: "planning",
-        date: date,
+        status: "idle",
+        genre: [],
         xCoordinate: lat,
         yCoordinate: lng,
+        ticketsNumber: parseInt(ticketsNumber),
+        comments: [],
+        date: date.toString(),
+        isOffline: isOffline,
+        price: parseInt(price),
+        users: [],
+
       });
-      setResult(res.data.stream_key);
+      setResult(res);
     } catch (error) {
       console.log(error);
       setResult(false);

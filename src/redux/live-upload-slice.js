@@ -32,11 +32,17 @@ export const liveUploadSlice = createSlice({
         },
         setisOffline: (state, action) => {
             state.isOffline = action.payload
-        }
+        },
+        setTicketsNumber: (state, action) => {
+            state.ticketsNumber = action.payload
+        },
+        setTicketPrice: (state, action) => {
+            state.ticketPrice = action.payload
+        },
     }
 });
 
-export const { setLiveTitle, setLiveDescription, setLiveGenre, setLiveLocation, setLiveDate, setFile, setisOffline } = liveUploadSlice.actions;
+export const { setLiveTitle, setLiveDescription, setLiveGenre, setLiveLocation, setLiveDate, setFile, setisOffline, setTicketPrice, setTicketsNumber } = liveUploadSlice.actions;
 
 
 export const selectLiveTitle = (state) => state.liveUpload.title;
@@ -46,6 +52,8 @@ export const selectLiveLocation = (state) => state.liveUpload.location;
 export const selectLiveDate = (state) => state.liveUpload.date;
 export const selectFile = (state) => state.liveUpload.file;
 export const selectisOffline = (state) => state.liveUpload.isOffline;
+export const selectTicketsNumber = (state) => state.liveUpload.ticketsNumber;
+export const selectTicketPrice = (state) => state.liveUpload.ticketPrice;
 
 
 export default liveUploadSlice.reducer;
