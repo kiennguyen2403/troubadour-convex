@@ -75,7 +75,7 @@ export default function Home() {
             <Grid item xs={4}>
               <VideoButton
                 image={item.image}
-                title={item.title}
+                title={item.name}
                 description={item.description}
                 eventHandler={() => {
                   getMedia(item._id);
