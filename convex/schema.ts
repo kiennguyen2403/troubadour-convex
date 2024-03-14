@@ -13,7 +13,7 @@ export default defineSchema({
     yCoordinate: v.number(),
     tickets: v.array(v.id("ticket")),
     users: v.array(v.id("user")),
-    comments: v.array(v.id("comment")),
+    // comments: v.array(v.id("comment")),
     views: v.number(),
     streamKey: v.string(),
     eventUrl: v.string(),
@@ -39,8 +39,8 @@ export default defineSchema({
   comment: defineTable({
     content: v.string(),
     user: v.id("user"),
-    mediaID: v.id("media"),
-    eventID: v.id("event"),
+    mediaID: v.optional(v.id("media")),
+    eventID: v.optional(v.id("event")),
     likes: v.number(),
   }),
   genre: defineTable({
