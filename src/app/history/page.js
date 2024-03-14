@@ -7,7 +7,7 @@ import { Box } from "@mui/material";
 import VideoButton from "@/app/components/video-button";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { AirplaneTicket } from "@mui/icons-material";
+import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 
 export default function History(props) {
   const tickets = useQuery(api.ticket.get, {});
@@ -29,7 +29,7 @@ export default function History(props) {
             <Grid item xs={4}>
               <Card >
                 <CardContent>
-                  <AirplaneTicket />
+                  <LocalActivityIcon />
                   <Typography gutterBottom variant="h5" component="div">
                     {item.name}
                   </Typography>
