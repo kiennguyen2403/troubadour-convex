@@ -180,8 +180,10 @@ function Map() {
                                 </Typography>
                             </Stack>
                             <Button onClick={() => {
-                                router.push("/event/" + _event?.id);
-                            }} />
+                                router.push("/event/" + _event?._id);
+                            }}>
+                                Go to event
+                            </Button>
                         </Stack>
                     </Box>
                 </InfoWindow>

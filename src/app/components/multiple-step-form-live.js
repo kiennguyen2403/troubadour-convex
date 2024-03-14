@@ -23,7 +23,8 @@ import {
   selectTicketPrice,
   selectTicketsNumber,
 } from "../../redux/live-upload-slice";
-import { selectToken } from "../../redux/auth-slice";
+
+import { selectUserID } from "@/redux/auth-slice";
 import { useRouter } from "next/navigation";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import IconButton from "@mui/material/IconButton";
@@ -48,8 +49,9 @@ export default function MultipleStepFormLive({
   const location = useSelector(selectLiveLocation);
   const price = useSelector(selectTicketPrice);
   const ticketsNumber = useSelector(selectTicketsNumber);
+  const userID = useSelector(selectUserID);
 
-  const createEvent = useAction(api.muxActions.createMuxEvent);
+  const createEvent = useAction(api.eventActions.createEvent);
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
@@ -59,25 +61,21 @@ export default function MultipleStepFormLive({
   const handleUpload = async () => {
     try {
       setIsLoading(true);
-      // const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`);
-      // const lat = response.data.results[0].geometry.location.lat;
-      // const lng = response.data.results[0].geometry.location.lng;
-      const lat = -37.8102;
-      const lng = 144.9628;
+      const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}`);
+      const lat = response.data.results[0].geometry.location.lat;
+      const lng = response.data.results[0].geometry.location.lng;
       const res = await createEvent({
         name: title,
         description: description,
         status: "idle",
-        genre: [],
+        genre: genre,
         xCoordinate: lat,
         yCoordinate: lng,
         ticketsNumber: parseInt(ticketsNumber),
-        comments: [],
         date: date.toString(),
         isOffline: isOffline,
         price: parseInt(price),
-        users: [],
-
+        users: [userID],
       });
       setResult(res);
     } catch (error) {
@@ -204,6 +202,9 @@ export default function MultipleStepFormLive({
                       navigator.clipboard.writeText(result);
                     }}
                     size="small"
+                    sx={{
+                      marginLeft: "auto",
+                    }}
                   >
                     <ContentCopyIcon fontSize="small" />
                   </IconButton>

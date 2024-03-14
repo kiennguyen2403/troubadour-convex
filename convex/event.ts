@@ -15,7 +15,7 @@ export const post = internalMutation({
     name: v.string(),
     description: v.string(),
     status: v.string(),
-    genre: v.array(v.id("genre")),
+    genre: v.array(v.string()),
     isOffline: v.boolean(),
     xCoordinate: v.number(),
     yCoordinate: v.number(),
@@ -25,7 +25,7 @@ export const post = internalMutation({
     users: v.array(v.id("user")),
     // comments: v.array(v.id("comment")),
     streamKey: v.string(),
-    eventUrl: v.string(),
+    playbackID: v.string(),
   },
   handler: async (ctx, args) => {
     try {
@@ -43,7 +43,7 @@ export const post = internalMutation({
         date: args.date,
         views: 0,
         streamKey: args.streamKey,
-        eventUrl: args.eventUrl,
+        playbackID: args.playbackID,
       });
     } catch (e) {
       console.log(e);
@@ -83,7 +83,7 @@ export const getById = query({
 
 export const getByGenres = query({
   args: {
-    genres: v.array(v.id("genre")),
+    genres: v.array(v.string()),
   },
   handler: async (ctx, { genres }) => {
     try {
@@ -157,7 +157,7 @@ export const update = internalMutation({
     description: v.string(),
     isOffline: v.boolean(),
     status: v.string(),
-    genre: v.array(v.id("genre")),
+    genre: v.array(v.string()),
     xCoordinate: v.number(),
     yCoordinate: v.number(),
     views: v.number(),
@@ -166,7 +166,7 @@ export const update = internalMutation({
     // comments: v.array(v.id("comment")),
     date: v.string(),
     streamKey: v.string(),
-    eventUrl: v.string(),
+    playbackID: v.string(),
   },
 
   handler: async (ctx, args) => {
@@ -186,7 +186,7 @@ export const patch = internalMutation({
     name: v.optional(v.string()),
     description: v.optional(v.string()),
     status: v.optional(v.string()),
-    genre: v.optional(v.array(v.id("genre"))),
+    genre: v.optional(v.array(v.string())),
     xCoordinate: v.optional(v.number()),
     yCoordinate: v.optional(v.number()),
     tickets: v.optional(v.array(v.id("ticket"))),

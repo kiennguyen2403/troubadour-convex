@@ -33,7 +33,7 @@ export default function Event({ params }) {
     userID: userId ?? "jd7287bzyqv5smd4365qdfv6e56n1ahd",
   });
   const event = useQuery(api.event.getById, { id });
-  const genres = ["Jazz", "Outdoor"]
+
   const noEvent = (
     <Box>
       <Stack
@@ -82,7 +82,7 @@ export default function Event({ params }) {
             }}
           />
           <Typography variant="h3">{event?.name}</Typography>
-          <Typography variant="body1">{event?.description}</Typography>
+    
         </Stack>
         <Divider />
         <Stack spacing={50} direction="row">
@@ -116,8 +116,8 @@ export default function Event({ params }) {
                 {event?.description}
               </Typography>
               <Stack spacing={1} direction="row">
-                {genres.map((genre) => {
-                  return <Chip label={"#" + genre} />;
+                {event?.genre.map((item) => {
+                  return <Chip label={"#" + item} />;
                 })}
               </Stack>
             </Stack>
@@ -169,7 +169,7 @@ export default function Event({ params }) {
                     variant="contained"
                     color="primary"
                     onClick={async () => {
-                      router.push("/event/" + event._id);
+                      router.push("/video/" + event._id);
                     }}
                   >
                     View event

@@ -28,10 +28,10 @@ export default function Payment({ params }) {
     const [cardHolder, setCardHolder] = useState("");
     const event = useQuery(api.event.getById, { id });
     const userId = useSelector(selectUserID);
-    const buyTicket = useAction(api.muxActions.buyTicket);
+    const buyTicket = useAction(api.eventActions.buyTicket);
+    
     const router = useRouter();
 
-    console.log("userId:" + userId);
     const handlePurchase = async () => {
         try {
             const exp_month = expiryDate.split("/")[0];

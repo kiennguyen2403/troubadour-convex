@@ -23,14 +23,14 @@ const { video } = new Mux({
     "8iEJtQyTMXv0JMn8vuIUYFdZlc9lvW3AsuUf72jWK8jIw6jsoDl1Mqk5FsW4Qv9ldFs5YmK2AOb",
 });
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "no key");
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_51NQeoyGV1HCIrqOZx8hmXUZn8Nsfo3AOuJyywhITVaHZNe3YqCJxoGZj8h6s3dbPqFUJZiE9uU7jNq6PGaxZQScE000RYDNKHE");
 
-export const createMuxEvent = action({
+export const createEvent = action({
   args: {
     name: v.string(),
     description: v.string(),
     status: v.string(),
-    genre: v.array(v.id("genre")),
+    genre: v.array(v.string()),
     xCoordinate: v.number(),
     yCoordinate: v.number(),
     ticketsNumber: v.number(),
@@ -49,16 +49,23 @@ export const createMuxEvent = action({
         },
       });
 
-  
-      let tickets: Id<"ticket">[] = [];
+
+      const tickets: Id<"ticket">[] = [];
       for (let i = 0; i < args.ticketsNumber; i++) {
         const ticket = await ctx.runMutation(internal.ticket.post, {
-          name: `Ticket ${i + 1}`,
+          name: args.name,
           fee: args.price,
         });
-        if (typeof ticket !== "string") tickets.push(ticket);
+        console.log(ticket);
+        if (
+          ticket !== "No name provided for ticket post"
+          && ticket !== "No fee provided for ticket post"
+          && ticket !== "failure"
+        ) 
+          tickets.push(ticket);
       }
 
+   
       if (!args.date) args.date = new Date().toISOString();
 
       const result: any = await ctx.runMutation(internal.event.post, {
@@ -71,12 +78,10 @@ export const createMuxEvent = action({
         ticketsNumber: args.ticketsNumber,
         tickets: tickets,
         users: args.users,
-        // comments: args.comments,
         streamKey: streamKey.stream_key,
         date: args.date,
         isOffline: args.isOffline,
-        eventUrl:
-          process.env.NEXT_PUBLIC_BASE_URL + "/event/" + streamKey.id,
+        playbackID: streamKey.playback_ids ? streamKey.playback_ids[0].id : "",
       });
 
       return streamKey.id;
@@ -87,7 +92,7 @@ export const createMuxEvent = action({
   },
 });
 
-export const getMuxEvent = internalAction({
+export const getEvent = internalAction({
   args: {
     id: v.string(),
   },
@@ -102,7 +107,7 @@ export const getMuxEvent = internalAction({
   },
 });
 
-export const getMuxEvents = internalAction({
+export const getEvents = internalAction({
   args: {},
   handler: async (ctx, args) => {
     try {
@@ -115,7 +120,7 @@ export const getMuxEvents = internalAction({
   },
 });
 
-export const deleteMuxEvent = action({
+export const deleteEvent = action({
   args: {
     id: v.id("event"),
   },
@@ -131,7 +136,7 @@ export const deleteMuxEvent = action({
   },
 });
 
-export const updateMuxEventStatus = action({
+export const updateEventStatus = action({
   args: {
     id: v.id("event"),
     status: v.string(),

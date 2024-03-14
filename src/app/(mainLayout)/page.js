@@ -21,11 +21,14 @@ import { selectMedias, selectCurrentMedia } from "../../redux/media-slice";
 import AudioButton from "../components/audio-button";
 import { api } from "../../../convex/_generated/api";
 import { useQuery } from "convex/react";
+import useStoreUserEffect from "@/convex/useStoreUserEffect";
+
 
 export default function Home() {
   const token = useSelector(selectToken);
   const medias = useSelector(selectMedias);
   const media = useSelector(selectCurrentMedia);
+  const userID = useStoreUserEffect();
   const dispatch = useDispatch();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);

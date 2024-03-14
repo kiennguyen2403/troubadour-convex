@@ -10,11 +10,13 @@ import {
     selectLiveGenre,
 } from "../../redux/live-upload-slice";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 export const LiveExtra = () => {
 
     // const result = useQueries(api.genre.get, {})
-    const genres = ["Jazz", "Acoustic"];
+    const genres = useQuery(api.genre.get, {}) || [];
     const file = useSelector(selectFile);
     const liveGenre = useSelector(selectLiveGenre);
     const dispatch = useDispatch();
@@ -69,10 +71,10 @@ export const LiveExtra = () => {
                 {genres.map((genre, index) => (
                     <Chip
                         key={index}
-                        label={"#" + genre}
+                        label={"#" + genre.name}
                         variant={"filled"}
                         onClick={() => {
-                            dispatch(setLiveGenre([genre, ...liveGenre]));
+                            dispatch(setLiveGenre([genre.name, ...liveGenre]));
                         }}
                         color="primary"
                     />))

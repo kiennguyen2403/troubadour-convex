@@ -37,7 +37,7 @@ export default function ({ params }) {
   });
 
   const player = (
-    <CustomVideo playbackId={id} title={event?.name || ""} description={event?.description || ""} />
+    <CustomVideo playbackId={event?.playbackID} title={event?.name || ""} description={event?.description || ""} />
   );
 
   const commentSection = <CommentSection eventId={id} userId={userId} comments={comments} />;
