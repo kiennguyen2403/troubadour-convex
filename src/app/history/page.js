@@ -2,12 +2,12 @@
 import { React, useState, useEffect } from "react";
 import axios from "axios";
 import ClippedDrawer from "@/app/components/header";
-import { Grid, Typography } from "@mui/material";
+import { Grid, Typography, Card, CardContent } from "@mui/material";
 import { Box } from "@mui/material";
 import VideoButton from "@/app/components/video-button";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-// import { api } from '../../api/api';
+import { AirplaneTicket } from "@mui/icons-material";
 
 export default function History(props) {
   const tickets = useQuery(api.ticket.get, {});
@@ -27,12 +27,20 @@ export default function History(props) {
         {tickets?.length > 0 ? (
           tickets.map((item) => (
             <Grid item xs={4}>
-              {/* <VideoButton
-                image={item.image}
-                title={item.title}
-                description={item.description}
-                eventHandler={getMedias}
-              /> */}
+              <Card >
+                <CardContent>
+                  <AirplaneTicket />
+                  <Typography gutterBottom variant="h5" component="div">
+                    {item.name}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {item._creationTime}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {item.fee}$
+                  </Typography>
+                </CardContent>
+              </Card>
             </Grid>
           ))
         ) : (

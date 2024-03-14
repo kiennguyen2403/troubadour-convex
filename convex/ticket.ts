@@ -16,6 +16,7 @@ export const post = internalMutation({
                     name: args.name,
                     fee: args.fee,
                     status: "active",
+
                 });
         } catch (e) {
             console.log(e);
@@ -102,8 +103,12 @@ export const patch = internalMutation({
     handler: async (ctx, args) => {
         try {
             if (!args.id) return "No id provided for ticket patch";
+            const data: { [key: string]: any } = {};
+            if (args?.name) data.name = args.name;
+            if (args?.user) data.user = args.user;
+            if (args?.status) data.status = args.status;
             return await ctx.db
-                .patch(args.id, args);
+                .patch(args.id, data);
         } catch (e) {
             console.log(e);
             return "failure";

@@ -28,7 +28,8 @@ export default function Payment({ params }) {
     const [cardHolder, setCardHolder] = useState("");
     const event = useQuery(api.event.getById, { id });
     const userId = useSelector(selectUserID);
-    const buyTicket = useAction(api.muxActions.buyTicket);
+    const buyTicket = useAction(api.eventActions.buyTicket);
+    
     const router = useRouter();
 
     const handlePurchase = async () => {
@@ -37,21 +38,21 @@ export default function Payment({ params }) {
             const exp_year = expiryDate.split("/")[1];
             setIsLoading(true);
             const result = await buyTicket({
-                id: event.id,
-                user: userId,
+                id: id,
+                user: userId ?? "jd7287bzyqv5smd4365qdfv6e56n1ahd",
                 cardNumber: cardNumber,
-                cvc: cvc,
-                exp_month: exp_month,
-                exp_year: exp_year,
+                cvc: cvv,
+                exp_month: parseInt(exp_month),
+                exp_year: parseInt(exp_year),
                 cardHolder: cardHolder
             });
-
+            console.log(result);
             if (result.error) {
                 setIsLoading(false);
                 setIsErrorDisplay(true);
                 return;
             }
-            router.push("event" + id);
+            router.push("/event/" + id);
             setIsLoading(false);
 
         } catch (error) {
