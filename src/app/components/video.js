@@ -4,7 +4,7 @@ import { CardContent, Typography } from '@mui/material';
 export default function CustomVideo({ type = "ll-live", playbackId, title, description }) {
     return (
         <Card>
-            <CardMedia >
+            <CardMedia>
                 <MuxPlayer
                     streamType={type} // use "ll-live" for low-latency streams
                     playbackId={playbackId}
@@ -13,6 +13,7 @@ export default function CustomVideo({ type = "ll-live", playbackId, title, descr
                         video_title: "Test video title",
                         viewer_user_id: "user-id-007",
                     }}
+                    style={{height: '60vh'}}
                 />
             </CardMedia>
             <CardContent>
