@@ -60,43 +60,47 @@ type Media = {
 export const getByUserID = query({
   args: { userID: v.id("user") },
   handler: async (ctx, args) => {
-    if (!args) {
-      throw "userID was not provided";
-    }
-    var recentPlaylist: (Playlist | null)[] = [];
-    var recentMedias: (Media | null)[] = [];
-    const history = await ctx.db
-      .query("history")
-      .filter((q) => q.eq(q.field("userID"), args.userID))
-      .first();
-    if (!history) {
+    try {
+      if (!args) {
+        throw "userID was not provided";
+      }
+      var recentPlaylist: (Playlist | null)[] = [];
+      var recentMedias: (Media | null)[] = [];
+      const history = await ctx.db
+        .query("history")
+        .filter((q) => q.eq(q.field("userID"), args.userID))
+        .first();
+      if (!history) {
+        return { recentPlaylist: [], recentMedias: [] };
+      }
+      await Promise.all(
+        history?.playlists.map(async (playlist) => {
+          const res = await ctx.db
+            .query("playlist")
+            .filter((q) => q.eq(q.field("_id"), playlist))
+            .first()
+            .then((res) => {
+              console.log("pushed playlist");
+              recentPlaylist.push(res);
+              console.log(recentPlaylist);
+            });
+        })
+      );
+      await Promise.all(
+        history?.medias.map(async (media) => {
+          const mediaRes = await ctx.db
+            .query("media")
+            .filter((q) => q.eq(q.field("_id"), media))
+            .first()
+            .then((mediaRes) => {
+              recentMedias.push(mediaRes);
+            });
+        })
+      );
+      return { recentPlaylist: recentPlaylist, recentMedias: recentMedias };
+    } catch (e) {
       return { recentPlaylist: [], recentMedias: [] };
     }
-    await Promise.all(
-      history?.playlists.map(async (playlist) => {
-        const res = await ctx.db
-          .query("playlist")
-          .filter((q) => q.eq(q.field("_id"), playlist))
-          .first()
-          .then((res) => {
-            console.log("pushed playlist");
-            recentPlaylist.push(res);
-            console.log(recentPlaylist);
-          });
-      })
-    );
-    await Promise.all(
-      history?.medias.map(async (media) => {
-        const mediaRes = await ctx.db
-          .query("media")
-          .filter((q) => q.eq(q.field("_id"), media))
-          .first()
-          .then((mediaRes) => {
-            recentMedias.push(mediaRes);
-          });
-      })
-    );
-    return { recentPlaylist: recentPlaylist, recentMedias: recentMedias };
   },
 });
 
@@ -211,6 +215,8 @@ function sortPlaylistHistory(
   if (index !== -1) {
     arr.splice(index, 1);
     arr.unshift(target);
+  } else {
+    arr.unshift(target);
   }
   return arr;
 }
@@ -222,6 +228,8 @@ function sortMediaHistory(
   const index = arr.indexOf(target);
   if (index !== -1) {
     arr.splice(index, 1);
+    arr.unshift(target);
+  } else {
     arr.unshift(target);
   }
   return arr;
