@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "npx convex import --append --table genre convex/genres.json"
   },
   "dependencies": {
     "@clerk/clerk-react": "^4.30.7",

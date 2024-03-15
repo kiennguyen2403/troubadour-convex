@@ -56,16 +56,16 @@ export const getByName = query({
     name: v.string(),
     paginationOpts: v.optional(paginationOptsValidator),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx, { name, paginationOpts }) => {
     try {
-      return args.paginationOpts
+      return paginationOpts
         ? await ctx.db
             .query("media")
-            .filter((q) => q.eq(q.field("name"), args.name))
-            .paginate(args.paginationOpts)
+            .withSearchIndex("search_name", (q) => q.search("name", name))
+            .paginate(paginationOpts)
         : await ctx.db
             .query("media")
-            .filter((q) => q.eq(q.field("name"), args.name))
+            .withSearchIndex("search_name", (q) => q.search("name", name))
             .collect();
     } catch (e) {
       console.log(e);

@@ -27,6 +27,6 @@ export default function ArtistButton({ image, title, eventHandler }) {
                     </Typography>
                 </CardContent>
             </CardActionArea>
-        </Card >
+        </Card>
     );
 }

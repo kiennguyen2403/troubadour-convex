@@ -27,7 +27,11 @@ export default defineSchema({
     name: v.string(),
     tokenIdentifier: v.string(),
     role: v.string(),
-  }).index("by_token", ["tokenIdentifier"]),
+  })
+    .index("by_token", ["tokenIdentifier"])
+    .searchIndex("search_name", {
+      searchField: "name",
+    }),
   history: defineTable({
     userID: v.id("user"),
     playlists: v.array(v.id("playlist")),
@@ -64,6 +68,8 @@ export default defineSchema({
         // Others, for later vector searches for media
       })
     ),
+  }).searchIndex("search_name", {
+    searchField: "name",
   }),
   playlist: defineTable({
     name: v.string(),
