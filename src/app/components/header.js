@@ -1,18 +1,23 @@
 "use client";
-import { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Stack from "@mui/material/Stack";
-import AppBar from "@mui/material/AppBar";
-import CssBaseline from "@mui/material/CssBaseline";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import { useState } from "react";
+import {
+  Box,
+  Drawer,
+  AppBar,
+  CssBaseline,
+  Toolbar,
+  List,
+  Typography,
+  Divider,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  IconButton,
+  Collapse,
+} from "@mui/material";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 import HomeIcon from "@mui/icons-material/Home";
 import HistoryIcon from "@mui/icons-material/History";
 import SearchIcon from "@mui/icons-material/Search";
@@ -20,14 +25,9 @@ import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import ExploreIcon from "@mui/icons-material/Explore";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import IconButton from "@mui/material/IconButton";
-import { redirect, useRouter } from "next/navigation";
-import { Button, Grid } from "@mui/material";
+
+import { useRouter } from "next/navigation";
 import MediaControl from "./media-controller";
-import Avatar from "@mui/material/Avatar";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { selectAuth, selectImage } from "../../redux/auth-slice";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 import MultipleStepForm from "./multiple-step-form";
 import MultipleStepFormLive from "./multiple-step-form-live";
@@ -36,27 +36,30 @@ import { MediaDetail } from "./media-details";
 import Confirm from "./confirm";
 import { LiveDetail } from "./live-detail";
 import LiveConfirm from "./live-confirm";
-import VideoButton from "./video-button";
-import OptionLoginBox from "./option-login-box";
 import OptionNewVideoBox from "./option-new-video-box";
 import React from "react";
-import { SignInButton, UserButton, auth } from "@clerk/nextjs";
-import { currentUser } from "@clerk/nextjs";
-import { useConvexAuth } from "convex/react";
-import { SignIn } from "@clerk/clerk-react";
-import useStoreUserEffect from "@/convex/useStoreUserEffect";
+import { UserButton } from "@clerk/nextjs";
+import { useConvexAuth, useQuery } from "convex/react";
 import { LiveExtra } from "./live-extra";
+import { Play } from "next/font/google";
+import PlaylistForm from "./playlist-form";
+import { api } from "../../../convex/_generated/api";
+import { selectUserID } from "@/redux/auth-slice";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 240;
 
 export default function ClippedDrawer({ Component }) {
   const router = useRouter();
-  const [playLists, setPlayLists] = useState([]);
+  const [playlistOpen, setPlaylistOpen] = useState(false);
   const [isOptionLoginOpen, setIsOptionLoginOpen] = useState(false);
   const [isOptionUploadOpen, setIsOptionUploadOpen] = useState(false);
   const [isMultipleFormOpen, setIsMultipleFormOpen] = useState(false);
   const [isLiveMultipleFormOpen, setIsLiveMultipleFormOpen] = useState(false);
+  const [isPlaylistFormOpen, setIsPlaylistFormOpen] = useState(false);
   const { isAuthenticated, isLoading } = useConvexAuth();
+  const userId = useSelector(selectUserID) ?? "";
+  const playlist = useQuery(api.playlist.getByUserId, { userId }) ?? [];
 
   const handleOptionLoginClick = () => {
     setIsOptionLoginOpen(!isOptionLoginOpen);
@@ -76,28 +79,13 @@ export default function ClippedDrawer({ Component }) {
     }
   };
 
-  const getPlayLists = async () => {
-    // try {
-    //   const result = await axios.get(api.media);
-    //   if (result) {
-    //     setPlayLists(result.data.playlists);
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  };
-
   const handleAddPlayList = async () => {
     if (!isAuthenticated) {
       router.push("/sign-in");
       return;
     }
-    setPlayLists([...playLists, "New PlayList#" + playLists.length]);
+    setIsPlaylistFormOpen(true);
   };
-
-  useEffect(() => {
-    getPlayLists();
-  }, []);
 
   const getFirstSection = () =>
     [
@@ -119,34 +107,43 @@ export default function ClippedDrawer({ Component }) {
       </ListItem>
     ));
 
-  const getSecondSection = () =>
-    playLists.map((text) => (
-      <ListItem key={text} disablePadding>
+  const getSecondSection = () => {
+    return playlist ? (
+      playlist.map(({ _id, name }) => (
         <ListItemButton
+          sx={{ pl: 4 }}
+          key={name}
           onClick={() => {
-            router.push("/playlist/" + text);
+            router.push("/playlist/" + _id);
           }}
         >
           <ListItemIcon>
             <LibraryMusicIcon />
           </ListItemIcon>
-          <ListItemText primary={text} />
+          <ListItemText primary={name} />
         </ListItemButton>
-      </ListItem>
-    ));
+      ))
+    ) : (
+      <></>
+    );
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      >
+      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
           <Typography variant="h6" component="div">
             Troubadour
           </Typography>
-          <div style={{ marginLeft: "auto", display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <div
+            style={{
+              marginLeft: "auto",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             <IconButton
               sx={{ marginRight: "2rem" }}
               size="large"
@@ -202,7 +199,6 @@ export default function ClippedDrawer({ Component }) {
             <ListItem key={"Create Playlist"} disablePadding>
               <ListItemButton
                 onClick={() => {
-                  console.log("clicked");
                   handleAddPlayList();
                 }}
               >
@@ -212,7 +208,24 @@ export default function ClippedDrawer({ Component }) {
                 <ListItemText primary={"Create Playlist"} />
               </ListItemButton>
             </ListItem>
-            {getSecondSection()}
+            <ListItem key={"My Playlist"} disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  setPlaylistOpen(!playlistOpen);
+                }}
+              >
+                <ListItemIcon>
+                  <LibraryAddIcon />
+                </ListItemIcon>
+                <ListItemText primary={"My Playlist"} />
+                {playlistOpen ? <ExpandLess /> : <ExpandMore />}
+              </ListItemButton>
+            </ListItem>
+            <Collapse in={playlistOpen} timeout="auto" unmountOnExit>
+              <List component="div" disablePadding>
+                {getSecondSection()}
+              </List>
+            </Collapse>
           </List>
         </Box>
       </Drawer>
@@ -240,13 +253,15 @@ export default function ClippedDrawer({ Component }) {
         component={[<UploadForm />, <MediaDetail />, <Confirm />]}
         steps={["Upload your file", "Provide information", "Confirm"]}
       />
-      
+
       <MultipleStepFormLive
         isOptionOpen={isLiveMultipleFormOpen}
         setIsOptionOpen={setIsLiveMultipleFormOpen}
         component={[<LiveDetail />, <LiveExtra />, <LiveConfirm />]}
         steps={["Provide information", "Extra Information", "Confirm"]}
       />
+
+      <PlaylistForm isOptionOpen={isPlaylistFormOpen} setIsOptionOpen={setIsPlaylistFormOpen} />
     </Box>
   );
 }

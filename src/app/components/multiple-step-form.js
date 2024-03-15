@@ -58,7 +58,6 @@ export default function MultipleStepForm({ component, steps, isOptionOpen, setIs
     description,
   };
 
-  console.log(mediaDetails)
   const saveAfterUpload = async (uploaded) => {
     const storageId = uploaded[0].response.storageId;
     const fileUrl = await getMediaUrl({ storageId });

@@ -68,7 +68,7 @@ export default defineSchema({
   playlist: defineTable({
     name: v.string(),
     privacy: v.union(v.literal("public"), v.literal("private")),
-    dateTime: v.number(), // Note: This may be changed to updatedDate later since _creationTime is default in convex schema
+    dateTime: v.optional(v.number()), // Note: This may be changed to updatedDate later since _creationTime is default in convex schema
     userId: v.id("user"),
     otherUsers: v.array(v.id("user")),
     genres: v.array(v.id("genre")),

@@ -15,7 +15,6 @@ import {
   setDescription,
   selectDescription,
   setPrivacy,
-  selectPrivacy,
 } from "../../redux/media-upload-slice";
 
 export const MediaDetail = () => {

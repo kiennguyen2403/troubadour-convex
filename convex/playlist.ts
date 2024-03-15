@@ -9,7 +9,7 @@ export const post = mutation({
     genres: v.array(v.id("genre")),
     medias: v.array(v.id("media")),
     name: v.string(),
-    dateTime: v.number(),
+    dateTime: v.optional(v.number()),
     privacy: v.union(v.literal("public"), v.literal("private")),
   },
   handler: async (ctx, args) => {
@@ -17,7 +17,7 @@ export const post = mutation({
       return await ctx.db.insert("playlist", args);
     } catch (e) {
       console.log(e);
-      return "Failed to create playlist.";
+      return "failure";
     }
   },
 });
@@ -29,7 +29,7 @@ export const getById = query({
       return await ctx.db.get(id);
     } catch (e) {
       console.log(e);
-      return "Failed to get playlist by id";
+      return "failure";
     }
   },
 });
@@ -40,7 +40,7 @@ export const get = query({
       return await ctx.db.query("playlist").collect();
     } catch (e) {
       console.log(e);
-      return "Failed to get playlists";
+      return "failure";
     }
   },
 });
@@ -67,7 +67,7 @@ export const getByGenre = query({
       return medias.filter(({ genres }) => genres.includes(genre._id));
     } catch (e) {
       console.log(e);
-      return "Failed to get playlist by genre";
+      return "failure";
     }
   },
 });
@@ -83,13 +83,13 @@ export const getByArtists = query({
       );
     } catch (e) {
       console.log(e);
-      return "Failed to get playlist by artist";
+      return "failure";
     }
   },
 });
 
 export const getByUserId = query({
-  args: { userId: v.id("user"), paginationOpts: v.optional(paginationOptsValidator) },
+  args: { userId: v.string(), paginationOpts: v.optional(paginationOptsValidator) },
   handler: async (ctx, { userId, paginationOpts }) => {
     try {
       return paginationOpts
@@ -103,7 +103,7 @@ export const getByUserId = query({
             .collect();
     } catch (e) {
       console.log(e);
-      return "Failed to get playlist by user";
+      return "failure";
     }
   },
 });
@@ -123,7 +123,7 @@ export const update = mutation({
       return await ctx.db.patch(args.id, args);
     } catch (e) {
       console.log(e);
-      return "Failed to update playlist";
+      return "failure";
     }
   },
 });
@@ -137,7 +137,7 @@ export const deleteById = mutation({
       return await ctx.db.delete(id);
     } catch (e) {
       console.log(e);
-      return "Failed to delete playlist";
+      return "failure";
     }
   },
 });
