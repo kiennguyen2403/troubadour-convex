@@ -1,18 +1,17 @@
 // FileUpload.js
 import React, { useState } from "react";
-import { Button, Container, Typography } from "@mui/material";
+import { Chip, Container, Typography, Stack } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import { setFile, selectFile } from "../../redux/media-upload-slice";
+import { setFile, selectFile, setGenre, selectGenre } from "../../redux/media-upload-slice";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 export const UploadForm = () => {
+  const genres = useQuery(api.genre.get, {}) || [];
+  const mediaGenre = useSelector(selectGenre);
   const file = useSelector(selectFile);
   const dispatch = useDispatch();
-
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    dispatch(setFile(file));
-  };
 
   //check if the file is media file
   const isMediaFile = (file) => {
@@ -30,10 +29,18 @@ export const UploadForm = () => {
     return allowedTypes.includes(file.type);
   };
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (isMediaFile(file)) {
+      dispatch(setFile(file));
+    } else {
+      // event.target.files = [];
+      alert("Only image or audio allowed");
+    }
+  };
+
   return (
-    <Container
-      style={{ display: "flex", flexDirection: "column", alignItems: "center" }}
-    >
+    <Container>
       <input
         type="file"
         onChange={handleFileChange}
@@ -59,6 +66,19 @@ export const UploadForm = () => {
         </div>
         <Typography>{file ? file.name : "Choose File"}</Typography>
       </label>
+      <Stack direction="row" gap={1} flexWrap="wrap" padding="1rem">
+        {genres.map((genre, index) => (
+          <Chip
+            key={index}
+            label={"#" + genre.name}
+            variant={"filled"}
+            onClick={() => {
+              dispatch(setGenre([genre._id, ...mediaGenre]));
+            }}
+            color="primary"
+          />
+        ))}
+      </Stack>
     </Container>
   );
 };

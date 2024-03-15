@@ -16,6 +16,6 @@ export default function GenreButton({ image, title, eventHandler, color = "red" 
 
                 </CardContent>
             </CardActionArea>
-        </Card >
+        </Card>
     );
 }

@@ -1,12 +1,21 @@
 // FileUpload.js
 import React, { useState } from "react";
-import { Button, Container, TextField } from "@mui/material";
+import {
+  RadioGroup,
+  Radio,
+  FormControlLabel,
+  Container,
+  TextField,
+  FormLabel,
+} from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import {
   setTitle,
   selectTitle,
   setDescription,
   selectDescription,
+  setPrivacy,
+  selectPrivacy,
 } from "../../redux/media-upload-slice";
 
 export const MediaDetail = () => {
@@ -20,6 +29,10 @@ export const MediaDetail = () => {
 
   const handleDescriptionChange = (event) => {
     dispatch(setDescription(event.target.value));
+  };
+
+  const handlePrivacyChange = (event) => {
+    dispatch(setPrivacy(event.target.value));
   };
 
   return (
@@ -42,6 +55,21 @@ export const MediaDetail = () => {
         multiline
         rows={4}
       />
+      <FormLabel id="privacy">Privacy</FormLabel>
+      <RadioGroup row aria-labelledby="privacy">
+        <FormControlLabel
+          value="public"
+          control={<Radio />}
+          label="Public"
+          onClick={handlePrivacyChange}
+        />
+        <FormControlLabel
+          value="private"
+          control={<Radio />}
+          label="Private"
+          onClick={handlePrivacyChange}
+        />
+      </RadioGroup>
     </Container>
   );
 };

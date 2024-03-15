@@ -8,11 +8,12 @@ export const post = mutation({
     otherUsers: v.array(v.id("user")),
     genres: v.array(v.id("genre")),
     name: v.string(),
-    dateTime: v.number(),
+    description: v.optional(v.string()),
+    dateTime: v.optional(v.number()),
     privacy: v.union(v.literal("public"), v.literal("private")),
     fileUrl: v.string(),
     storageId: v.id("_storage"),
-    comments: v.array(v.id("comments")),
+    // comments: v.array(v.id("comments")),
     views: v.number(),
     likes: v.number(),
   },
@@ -21,7 +22,7 @@ export const post = mutation({
       return await ctx.db.insert("media", args);
     } catch (e) {
       console.log(e);
-      return "Failed to insert media";
+      return "failure";
     }
   },
 });
@@ -32,7 +33,7 @@ export const get = query({
       return await ctx.db.query("media").collect();
     } catch (e) {
       console.log(e);
-      return "Failed to get medias";
+      return "failure";
     }
   },
 });
@@ -44,7 +45,7 @@ export const getById = query({
       return await ctx.db.get(id);
     } catch (e) {
       console.log(e);
-      return "Failed to get media by id";
+      return "failure";
     }
   },
 });
@@ -68,7 +69,7 @@ export const getByName = query({
             .collect();
     } catch (e) {
       console.log(e);
-      return "Failed to get media by name";
+      return "failure";
     }
   },
 });
@@ -95,7 +96,7 @@ export const getByGenre = query({
       return medias.filter(({ genres }) => genres.includes(genre._id));
     } catch (e) {
       console.log(e);
-      return "Failed to get media by genre";
+      return "failure";
     }
   },
 });
@@ -115,7 +116,7 @@ export const getByUserId = query({
             .collect();
     } catch (e) {
       console.log(e);
-      return "Failed to get media by user";
+      return "failure";
     }
   },
 });
@@ -131,7 +132,7 @@ export const getByArtists = query({
       );
     } catch (e) {
       console.log(e);
-      return "Failed to get media by artist";
+      return "failure";
     }
   },
 });
@@ -145,7 +146,7 @@ export const deleteById = mutation({
       return await ctx.db.delete(id);
     } catch (e) {
       console.log(e);
-      return "Failed to delete media";
+      return "failure";
     }
   },
 });
@@ -156,9 +157,10 @@ export const update = mutation({
     otherUsers: v.optional(v.array(v.id("user"))),
     genres: v.optional(v.array(v.id("genre"))),
     name: v.optional(v.string()),
+    description: v.optional(v.string()),
     dateTime: v.optional(v.number()),
     privacy: v.optional(v.union(v.literal("public"), v.literal("private"))),
-    comments: v.optional(v.array(v.id("comments"))),
+    // comments: v.optional(v.array(v.id("comments"))),
     views: v.optional(v.number()),
     likes: v.optional(v.number()),
   },
@@ -167,7 +169,7 @@ export const update = mutation({
       return await ctx.db.patch(args.id, args);
     } catch (e) {
       console.log(e);
-      return "Failed to update media";
+      return "failure";
     }
   },
 });
@@ -184,7 +186,7 @@ export const generateUploadUrl = mutation({
       return await ctx.storage.generateUploadUrl();
     } catch (e) {
       console.log(e);
-      return "Failed to generare upload URL";
+      return "failure";
     }
   },
 });
@@ -196,7 +198,7 @@ export const getMediaUrl = mutation({
       return await ctx.storage.getUrl(storageId);
     } catch (e) {
       console.log(e);
-      return "Failed to get media URL";
+      return "failure";
     }
   },
 });
@@ -210,7 +212,7 @@ export const deleteMediaFile = mutation({
       return await ctx.storage.delete(storageId);
     } catch (e) {
       console.log(e);
-      return "Failed to delete media file";
+      return "failure";
     }
   },
 });
