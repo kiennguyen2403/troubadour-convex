@@ -9,8 +9,7 @@ export default function Tab() {
     return (
         <View style={styles.container}>
             <MapView
-                style={styles.map}
-            >
+                style={styles.map}>
                 {
                     events?.map((event) => {
                         return (

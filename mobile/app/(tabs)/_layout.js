@@ -1,6 +1,7 @@
 import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Tabs } from 'expo-router';
+import { Tabs, Stack } from 'expo-router';
+
 
 export default function TabLayout() {
     return (
@@ -8,21 +9,21 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="index"
                 options={{
-                    title: 'Home',
+                    headerShown: false,
                     tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="search"
                 options={{
-                    title: 'Search',
+                    headerShown: false,
                     tabBarIcon: ({ color }) => <FontAwesome size={28} name="search" color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="explore"
                 options={{
-                    title: 'Explore',
+                    headerShown: false,
                     tabBarIcon: ({ color }) => <FontAwesome size={28} name="compass" color={color} />,
                 }}
             />
@@ -30,7 +31,7 @@ export default function TabLayout() {
             <Tabs.Screen
                 name="history"
                 options={{
-                    title: 'History',
+                    headerShown: false,
                     tabBarIcon: ({ color }) => <FontAwesome size={28} name="history" color={color} />,
                 }}
             />
