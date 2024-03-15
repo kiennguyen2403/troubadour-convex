@@ -41,7 +41,6 @@ import React from "react";
 import { UserButton } from "@clerk/nextjs";
 import { useConvexAuth, useQuery } from "convex/react";
 import { LiveExtra } from "./live-extra";
-import { Play } from "next/font/google";
 import PlaylistForm from "./playlist-form";
 import { api } from "../../../convex/_generated/api";
 import { selectUserID } from "@/redux/auth-slice";
@@ -59,8 +58,9 @@ export default function ClippedDrawer({ Component }) {
   const [isPlaylistFormOpen, setIsPlaylistFormOpen] = useState(false);
   const { isAuthenticated, isLoading } = useConvexAuth();
   const userId = useSelector(selectUserID) ?? "";
-  const playlist = useQuery(api.playlist.getByUserId, { userId }) ?? [];
 
+  
+  const playlist = useQuery(api.playlist.getByUserId, { userId }) ?? [];
   const handleOptionLoginClick = () => {
     setIsOptionLoginOpen(!isOptionLoginOpen);
     if (!isOptionLoginOpen) {

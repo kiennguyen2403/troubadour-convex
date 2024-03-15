@@ -218,25 +218,25 @@ export const buyTicket: any = action({
 
       if (!ticketId) return "failure";
 
-      const paymentMethod = await stripe.paymentMethods.create({
-        type: 'card',
-        card: {
-          number: cardNumber,
-          cvc: cvc,
-          exp_month: exp_month, // Replace with the expiration month of the card
-          exp_year: exp_year // Replace with the expiration year of the card
-        },
-        billing_details: {
-          name: cardHolder
-        }
-      });
+      // const paymentMethod = await stripe.paymentMethods.create({
+      //   type: 'card',
+      //   card: {
+      //     number: cardNumber,
+      //     cvc: cvc,
+      //     exp_month: exp_month, // Replace with the expiration month of the card
+      //     exp_year: exp_year // Replace with the expiration year of the card
+      //   },
+      //   billing_details: {
+      //     name: cardHolder
+      //   }
+      // });
 
-      await stripe.paymentIntents.create({
-        amount: 1000,
-        currency: "usd",
-        payment_method: paymentMethod.id,
-        payment_method_types: ["card"],
-      });
+      // await stripe.paymentIntents.create({
+      //   amount: 1000,
+      //   currency: "usd",
+      //   payment_method: paymentMethod.id,
+      //   payment_method_types: ["card"],
+      // });
 
       return await ctx.runMutation(internal.ticket.patch, {
         id: ticketId,

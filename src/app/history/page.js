@@ -34,7 +34,7 @@ export default function History(props) {
                     {item.name}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {item._creationTime}
+                    {new Date(item._creationTime).toDateString()}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {item.fee}$
