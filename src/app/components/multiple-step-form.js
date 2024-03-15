@@ -13,51 +13,73 @@ import {
   selectTitle,
   selectDescription,
   selectGenre,
+  selectPrivacy,
+  selectCollaborators,
   setDescription,
   setFile,
   setGenre,
   setTitle,
+  setPrivacy,
+  setCollaborators,
 } from "../../redux/media-upload-slice";
-import { selectToken } from "../../redux/auth-slice";
-import axios from "axios";
-// import { api } from '../api/api';
+import { useMutation } from "convex/react";
+import { useUploadFiles } from "@xixixao/uploadstuff/react";
+import { api } from "../../../convex/_generated/api";
+import { selectUserID } from "@/redux/auth-slice";
 
-export default function MultipleStepForm({
-  component,
-  steps,
-  isOptionOpen,
-  setIsOptionOpen,
-}) {
+export default function MultipleStepForm({ component, steps, isOptionOpen, setIsOptionOpen }) {
   const dispatch = useDispatch();
-  const token = useSelector(selectToken);
   const file = useSelector(selectFile);
-  const title = useSelector(selectTitle);
+  const name = useSelector(selectTitle);
   const description = useSelector(selectDescription);
-  const genre = useSelector(selectGenre);
+  const genres = useSelector(selectGenre);
+  const privacy = useSelector(selectPrivacy);
+  const collaborators = useSelector(selectCollaborators);
+  const userId = useSelector(selectUserID);
 
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [result, setResult] = React.useState({});
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const handleFileUpload = async () => {
+  // convex functions
+  const generateUploadUrl = useMutation(api.media.generateUploadUrl);
+  const getMediaUrl = useMutation(api.media.getMediaUrl);
+  const saveMedia = useMutation(api.media.post);
+
+  const mediaDetails = {
+    userId,
+    otherUsers: collaborators,
+    genres,
+    name,
+    privacy,
+    views: 0,
+    likes: 0,
+    description,
+  };
+
+  const saveAfterUpload = async (uploaded) => {
+    const storageId = uploaded[0].response.storageId;
+    const fileUrl = await getMediaUrl({ storageId });
+    await saveMedia({
+      ...mediaDetails,
+      storageId,
+      fileUrl,
+    });
+  };
+
+  const { startUpload, isUploading } = useUploadFiles(generateUploadUrl, {
+    onUploadComplete: saveAfterUpload,
+    onUploadError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const handleUpload = async () => {
     try {
       setIsLoading(true);
-      // result = await axios.post(api.media.audio, {
-      //     file: file,
-      //     title: title,
-      //     description: description,
-      //     genre: genre,
-      // }, {
-      //     withCredentials: true,
-      //     headers: {
-      //         Accept: "application/json",
-      //         "Content-Type": "application/json",
-      //         "Access-Control-Allow-Origin": "*",
-      //         "Access-Control-Allow-Credentials": true,
-      //         Authorization: "Bearer " + token,
-      //     }
-      // });
+
+      await startUpload([file]);
 
       setResult(true);
     } catch (error) {
@@ -112,6 +134,8 @@ export default function MultipleStepForm({
     dispatch(setTitle(""));
     dispatch(setDescription(""));
     dispatch(setGenre([]));
+    dispatch(setPrivacy(""));
+    dispatch(setCollaborators([]));
   };
 
   React.useEffect(() => {
@@ -124,16 +148,14 @@ export default function MultipleStepForm({
         dispatch(setTitle(""));
         dispatch(setDescription(""));
         dispatch(setGenre([]));
+        dispatch(setPrivacy(""));
+        dispatch(setCollaborators([]));
       }
     }
   }, [isOptionOpen]);
 
   return (
-    <Dialog
-      open={isOptionOpen}
-      style={{ width: "100%", height: "100%" }}
-      fullWidth={true}
-    >
+    <Dialog open={isOptionOpen} style={{ width: "100%", height: "100%" }} fullWidth={true}>
       <DialogTitle>
         <Stepper activeStep={activeStep}>
           {steps.map((label, index) => {
@@ -159,10 +181,7 @@ export default function MultipleStepForm({
         <Box sx={{ width: "100%", height: "100%" }}>
           {activeStep === steps.length ? (
             <React.Fragment>
-              <Typography
-                sx={{ mt: 2, mb: 1, color: result ? "green" : "red" }}
-                textAlign="center"
-              >
+              <Typography sx={{ mt: 2, mb: 1, color: result ? "green" : "red" }} textAlign="center">
                 {result
                   ? "The file has been upload successfully!!"
                   : "There is error when uploading the file!!!"}
@@ -190,11 +209,7 @@ export default function MultipleStepForm({
                 </Button>
                 <LoadingButton
                   loading={isLoading}
-                  onClick={
-                    activeStep === steps.length - 1
-                      ? handleFileUpload
-                      : handleNext
-                  }
+                  onClick={activeStep === steps.length - 1 ? handleUpload : handleNext}
                 >
                   {activeStep === steps.length - 1 ? "Upload" : "Next"}
                 </LoadingButton>

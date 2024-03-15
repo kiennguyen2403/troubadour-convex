@@ -34,7 +34,7 @@ type Playlist = {
   medias: GenericId<"media">[];
   userId: GenericId<"user">;
   otherUsers: GenericId<"user">[];
-  dateTime: number;
+  dateTime?: number;
   privacy: "public" | "private";
 };
 
@@ -43,11 +43,11 @@ type Media = {
   otherUsers: string[];
   genres: string[];
   name: string;
-  dateTime: number;
+  dateTime?: number;
   privacy: "public" | "private";
   fileUrl: string;
   storageId: string;
-  comments: string[];
+  // comments: string[];
   views: number;
   likes: number;
   characteristics?: {

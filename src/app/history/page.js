@@ -7,27 +7,27 @@ import { Box } from "@mui/material";
 import VideoButton from "@/app/components/video-button";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import LocalActivityIcon from '@mui/icons-material/LocalActivity';
+import LocalActivityIcon from "@mui/icons-material/LocalActivity";
+import { selectUserID } from "@/redux/auth-slice";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
 
 export default function History(props) {
-  const tickets = useQuery(api.ticket.get, {});
-  const playlists = [];
+  const router = useRouter();
+  const userId = useSelector(selectUserID) ?? "";
+  const tickets = useQuery(api.ticket.getByUser, { userId }) ?? [];
+  const playlists = useQuery(api.playlist.getByUserId, { userId }) ?? [];
 
   const Recently = (
     <Box>
-      <Typography
-        variant="h5"
-        component="div"
-        gutterBottom
-        style={{ float: "left" }}
-      >
+      <Typography variant="h5" component="div" gutterBottom style={{ float: "left" }}>
         Recently Watched
       </Typography>
       <Grid container spacing={2}>
         {tickets?.length > 0 ? (
           tickets.map((item) => (
             <Grid item xs={4}>
-              <Card >
+              <Card>
                 <CardContent>
                   <LocalActivityIcon />
                   <Typography gutterBottom variant="h5" component="div">
@@ -44,13 +44,7 @@ export default function History(props) {
             </Grid>
           ))
         ) : (
-          <Typography
-            textAlign="center"
-            width="100%"
-            gutterBottom
-            marginTop="5%"
-            marginBottom="5%"
-          >
+          <Typography textAlign="center" width="100%" gutterBottom marginTop="5%" marginBottom="5%">
             No recently watched videos
           </Typography>
         )}
@@ -60,12 +54,7 @@ export default function History(props) {
 
   const Playlist = (
     <Box sx={{ marginTop: "5%" }}>
-      <Typography
-        variant="h5"
-        component="div"
-        gutterBottom
-        style={{ float: "left" }}
-      >
+      <Typography variant="h5" component="div" gutterBottom style={{ float: "left" }}>
         Playlists
       </Typography>
       <Grid container spacing={2}>
@@ -76,18 +65,14 @@ export default function History(props) {
                 image={item.image}
                 title={item.title}
                 description={item.description}
-                eventHandler={getMedias}
+                eventHandler={(videoID) => {
+                  router.push("/video/" + videoID);
+                }}
               />
             </Grid>
           ))
         ) : (
-          <Typography
-            textAlign="center"
-            width="100%"
-            gutterBottom
-            marginTop="5%"
-            marginBottom="5%"
-          >
+          <Typography textAlign="center" width="100%" gutterBottom marginTop="5%" marginBottom="5%">
             No playlists found
           </Typography>
         )}

@@ -1,5 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { paginationOptsValidator } from "convex/server";
 
 export const GetAll = query({
   args: {},
@@ -55,9 +56,7 @@ export const store = mutation({
     // Check if we've already stored this identity before.
     const user = await ctx.db
       .query("user")
-      .withIndex("by_token", (q) =>
-        q.eq("tokenIdentifier", identity.tokenIdentifier)
-      )
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", identity.tokenIdentifier))
       .unique();
     if (user !== null) {
       // If we've seen this identity before but the name has changed, patch the value.
@@ -72,5 +71,28 @@ export const store = mutation({
       tokenIdentifier: identity.tokenIdentifier,
       role: args.role,
     });
+  },
+});
+
+export const getByName = query({
+  args: {
+    name: v.string(),
+    paginationOpts: v.optional(paginationOptsValidator),
+  },
+  handler: async (ctx, { name, paginationOpts }) => {
+    try {
+      return paginationOpts
+        ? await ctx.db
+            .query("user")
+            .withSearchIndex("search_name", (q) => q.search("name", name))
+            .paginate(paginationOpts)
+        : await ctx.db
+            .query("user")
+            .withSearchIndex("search_name", (q) => q.search("name", name))
+            .collect();
+    } catch (e) {
+      console.log(e);
+      return "failure";
+    }
   },
 });

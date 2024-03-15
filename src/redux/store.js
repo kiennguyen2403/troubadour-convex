@@ -4,7 +4,7 @@ import mediaReducer from './media-slice';
 import settingReducer from './setting-slice';
 import mediaUploadReducer from './media-upload-slice';
 import liveUploadReducer from './live-upload-slice';
-
+import playlistUploadReducer from './playlist-upload-slice';
 
 export const store = configureStore({
     reducer: {
@@ -12,5 +12,6 @@ export const store = configureStore({
         media: mediaReducer,
         mediaUpload: mediaUploadReducer,
         liveUpload: liveUploadReducer,
+        playlistUpload: playlistUploadReducer,
     },
 })
