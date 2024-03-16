@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { View } from "react-native";
 import { LiveStreamView, LiveStreamMethods } from '@api.video/react-native-livestream';
-
+import RTMPPublisher from 'react-native-rtmp-publisher';
 
 const config = {
     cameraConfig: {
@@ -39,7 +39,7 @@ export default function Tab() {
 
     return (
         <View style={{ flex: 1 }}>
-            {/* <RTMPPublisher
+            <RTMPPublisher
                 ref={ref}
                 streamURL={url}
                 streamName={streamKey}
@@ -61,7 +61,7 @@ export default function Tab() {
                 onStreamStateChanged={(status) => {
 
                 }}
-            /> */}
+            />
         </View>
     );
 };
