@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useTheme } from '@mui/material/styles';
 import {
   Box,
   Drawer,
@@ -25,6 +26,8 @@ import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import ExploreIcon from "@mui/icons-material/Explore";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import MenuIcon from "@mui/icons-material/Menu";
 
 import { useRouter } from "next/navigation";
 import MediaControl from "./media-controller";
@@ -49,7 +52,9 @@ import { useSelector } from "react-redux";
 const drawerWidth = 240;
 
 export default function ClippedDrawer({ Component }) {
+  const theme = useTheme();
   const router = useRouter();
+  const [drawerOpen, setDrawerOpen] = useState(true);
   const [playlistOpen, setPlaylistOpen] = useState(false);
   const [isOptionLoginOpen, setIsOptionLoginOpen] = useState(false);
   const [isOptionUploadOpen, setIsOptionUploadOpen] = useState(false);
@@ -59,7 +64,6 @@ export default function ClippedDrawer({ Component }) {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const userId = useSelector(selectUserID) ?? "";
 
-  
   const playlist = useQuery(api.playlist.getByUserId, { userId }) ?? [];
   const handleOptionLoginClick = () => {
     setIsOptionLoginOpen(!isOptionLoginOpen);
@@ -87,52 +91,110 @@ export default function ClippedDrawer({ Component }) {
     setIsPlaylistFormOpen(true);
   };
 
-  const getFirstSection = () =>
-    [
-      { title: "Home", component: <HomeIcon /> },
-      { title: "Search", component: <SearchIcon /> },
-      { title: "Explore", component: <ExploreIcon /> },
-      { title: "History", component: <HistoryIcon /> },
-    ].map((text, index) => (
-      <ListItem key={text.title} disablePadding>
-        <ListItemButton
-          onClick={() => {
-            if (text.title === "Home") router.push("/");
-            else router.push("/" + text.title.toLowerCase());
-          }}
-        >
-          <ListItemIcon>{text.component}</ListItemIcon>
-          <ListItemText primary={text.title} />
-        </ListItemButton>
-      </ListItem>
-    ));
+  const myPlaylistsSection = playlist ? (
+    playlist.map(({ _id, name }) => (
+      <ListItemButton
+        sx={{ pl: 4 }}
+        key={name}
+        onClick={() => {
+          router.push("/playlist/" + _id);
+        }}
+      >
+        <ListItemIcon>
+          <LibraryMusicIcon />
+        </ListItemIcon>
+        <ListItemText primary={name} />
+      </ListItemButton>
+    ))
+  ) : (
+    <></>
+  );
 
-  const getSecondSection = () => {
-    return playlist ? (
-      playlist.map(({ _id, name }) => (
+  const firstSection = [
+    { title: "Home", component: <HomeIcon /> },
+    { title: "Search", component: <SearchIcon /> },
+    { title: "Explore", component: <ExploreIcon /> },
+    { title: "History", component: <HistoryIcon /> },
+  ].map((text, index) => (
+    <ListItem key={text.title} disablePadding>
+      <ListItemButton
+        onClick={() => {
+          if (text.title === "Home") router.push("/");
+          else router.push("/" + text.title.toLowerCase());
+        }}
+      >
+        <ListItemIcon>{text.component}</ListItemIcon>
+        <ListItemText primary={text.title} />
+      </ListItemButton>
+    </ListItem>
+  ));
+
+  const secondSection = (
+    <>
+      <ListItem key={"Your channel"} disablePadding>
         <ListItemButton
-          sx={{ pl: 4 }}
-          key={name}
           onClick={() => {
-            router.push("/playlist/" + _id);
+            if (userId) {
+              router.push("/channel/" + userId);
+            }
           }}
         >
           <ListItemIcon>
-            <LibraryMusicIcon />
+            <PersonOutlineIcon />
           </ListItemIcon>
-          <ListItemText primary={name} />
+          <ListItemText primary={"Your channel"} />
         </ListItemButton>
-      ))
-    ) : (
-      <></>
-    );
-  };
+      </ListItem>
+      <ListItem key={"Create Playlist"} disablePadding>
+        <ListItemButton
+          onClick={() => {
+            handleAddPlayList();
+          }}
+        >
+          <ListItemIcon>
+            <LibraryAddIcon />
+          </ListItemIcon>
+          <ListItemText primary={"Create Playlist"} />
+        </ListItemButton>
+      </ListItem>
+      <ListItem key={"My Playlist"} disablePadding>
+        <ListItemButton
+          onClick={() => {
+            setPlaylistOpen(!playlistOpen);
+          }}
+        >
+          <ListItemIcon>
+            <LibraryAddIcon />
+          </ListItemIcon>
+          <ListItemText primary={"My Playlist"} />
+          {playlistOpen ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+      </ListItem>
+      <Collapse in={playlistOpen} timeout="auto" unmountOnExit>
+        <List component="div" disablePadding>
+          {myPlaylistsSection}
+        </List>
+      </Collapse>
+    </>
+  );
 
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
+          <IconButton
+            sx={{ marginLeft: "-1rem", marginRight: "0.5rem" }}
+            size="large"
+            aria-label="menu"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={() => {
+              setDrawerOpen(!drawerOpen);
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
           <Typography variant="h6" component="div">
             Troubadour
           </Typography>
@@ -181,7 +243,8 @@ export default function ClippedDrawer({ Component }) {
         </Toolbar>
       </AppBar>
       <Drawer
-        variant="permanent"
+        open={drawerOpen}
+        variant="persistent"
         sx={{
           width: drawerWidth,
           flexShrink: 0,
@@ -193,40 +256,9 @@ export default function ClippedDrawer({ Component }) {
       >
         <Toolbar />
         <Box sx={{ overflow: "auto" }}>
-          <List>{getFirstSection()}</List>
+          <List>{firstSection}</List>
           <Divider />
-          <List>
-            <ListItem key={"Create Playlist"} disablePadding>
-              <ListItemButton
-                onClick={() => {
-                  handleAddPlayList();
-                }}
-              >
-                <ListItemIcon>
-                  <LibraryAddIcon />
-                </ListItemIcon>
-                <ListItemText primary={"Create Playlist"} />
-              </ListItemButton>
-            </ListItem>
-            <ListItem key={"My Playlist"} disablePadding>
-              <ListItemButton
-                onClick={() => {
-                  setPlaylistOpen(!playlistOpen);
-                }}
-              >
-                <ListItemIcon>
-                  <LibraryAddIcon />
-                </ListItemIcon>
-                <ListItemText primary={"My Playlist"} />
-                {playlistOpen ? <ExpandLess /> : <ExpandMore />}
-              </ListItemButton>
-            </ListItem>
-            <Collapse in={playlistOpen} timeout="auto" unmountOnExit>
-              <List component="div" disablePadding>
-                {getSecondSection()}
-              </List>
-            </Collapse>
-          </List>
+          <List>{secondSection}</List>
         </Box>
       </Drawer>
       <Box
@@ -234,6 +266,18 @@ export default function ClippedDrawer({ Component }) {
         sx={{
           flexGrow: 1,
           p: 3,
+          transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
+          marginLeft: `-${drawerWidth}px`,
+          ...(drawerOpen && {
+            transition: theme.transitions.create("margin", {
+              easing: theme.transitions.easing.easeOut,
+              duration: theme.transitions.duration.enteringScreen,
+            }),
+            marginLeft: 0,
+          }),
         }}
       >
         <Toolbar />

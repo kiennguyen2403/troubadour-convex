@@ -102,7 +102,7 @@ export const getByGenre = query({
 });
 
 export const getByUserId = query({
-  args: { userId: v.id("user"), paginationOpts: v.optional(paginationOptsValidator) },
+  args: { userId: v.string(), paginationOpts: v.optional(paginationOptsValidator) },
   handler: async (ctx, { userId, paginationOpts }) => {
     try {
       return paginationOpts
