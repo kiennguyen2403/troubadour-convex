@@ -20,7 +20,8 @@ export default function Tab() {
         <View style={{
             width: '100%',
             height: "100%",
-            margin: "auto"
+            margin: "auto",
+            backgroundColor: "black"
         }}>
             <SafeAreaView>
                 <ScrollView>

@@ -1,6 +1,9 @@
 import * as React from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useSignUp } from "@clerk/clerk-expo";
+import { TouchableOpacity, View } from "react-native";
+import { Button, Text, TextInput } from "react-native-paper";
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 
 export default function SignUpScreen() {
     const { isLoaded, signUp, setActive } = useSignUp();
@@ -54,27 +57,58 @@ export default function SignUpScreen() {
     };
 
     return (
-        <View>
+        <View style={{
+            margin: "auto",
+            width: "100%",
+            height: "100%",
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "black"
+        }}>
             {!pendingVerification && (
-                <View>
-                    <View>
+                <View style={{
+                    margin: "auto",
+                    width: "100%",
+                    height: "100%",
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "black"
+                }}>
+                    <Text variant="titleLarge">
+                        Sign Up
+                    </Text>
+                    <View style={{
+                        width: "100%",
+                        padding: 10
+                    }}>
                         <TextInput
+                            mode="outlined"
                             autoCapitalize="none"
                             value={firstName}
                             placeholder="First Name..."
                             onChangeText={(firstName) => setFirstName(firstName)}
                         />
                     </View>
-                    <View>
+                    <View style={{
+                        width: "100%",
+                        padding: 10
+                    }}>
                         <TextInput
+                            mode="outlined"
                             autoCapitalize="none"
                             value={lastName}
                             placeholder="Last Name..."
                             onChangeText={(lastName) => setLastName(lastName)}
                         />
                     </View>
-                    <View>
+                    <View style={{
+                        width: "100%",
+                        padding: 10
+                    }}>
                         <TextInput
+                            mode="outlined"
                             autoCapitalize="none"
                             value={emailAddress}
                             placeholder="Email..."
@@ -82,19 +116,53 @@ export default function SignUpScreen() {
                         />
                     </View>
 
-                    <View>
+                    <View style={{
+                        width: "100%",
+                        padding: 10
+                    }}>
                         <TextInput
+                            mode="outlined"
                             value={password}
                             placeholder="Password..."
-                            placeholderTextColor="#000"
                             secureTextEntry={true}
                             onChangeText={(password) => setPassword(password)}
                         />
                     </View>
 
-                    <TouchableOpacity onPress={onSignUpPress}>
-                        <Text>Sign up</Text>
-                    </TouchableOpacity>
+                    <Button
+                        style={{
+                            marginTop: 30,
+                            backgroundColor: "blue",
+                            width: "40%",
+                        }}
+                        icon="login"
+                        onPress={onSignUpPress}
+                        type="outlined">
+                        Sign Up
+                    </Button>
+
+                    <View style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        marginTop: 20
+                    }}>
+                        <Text style={{
+                            color: "white",
+                        }}>
+                            Already have an account?
+                        </Text>
+                        <Button
+                            onPress={() => {
+                                router.push('signin');
+                            }}
+                            type="text">
+                            Sign In
+                        </Button>
+                    </View>
+
+
                 </View>
             )}
             {pendingVerification && (

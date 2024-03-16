@@ -11,11 +11,15 @@
   "dependencies": {
     "@clerk/clerk-expo": "^0.20.10",
     "@clerk/themes": "^1.7.10",
+    "@mux/mux-data-react-native-video": "^0.15.1",
     "@types/react": "~18.2.45",
     "convex": "^1.10.0",
     "expo": "~50.0.13",
+    "expo-av": "~13.10.5",
     "expo-constants": "~15.4.5",
+    "expo-linear-gradient": "~12.7.2",
     "expo-linking": "~6.2.2",
+    "expo-location": "~16.5.5",
     "expo-router": "~3.4.8",
     "expo-status-bar": "~1.11.1",
     "react": "18.2.0",
@@ -23,12 +27,12 @@
     "react-native": "^0.73.4",
     "react-native-dotenv": "^3.4.11",
     "react-native-get-random-values": "~1.8.0",
+    "react-native-maps": "1.10.0",
+    "react-native-nodemediaclient": "^0.2.7",
     "react-native-paper": "^5.12.3",
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
-    "typescript": "^5.3.0",
-    "react-native-maps": "1.10.0",
-    "expo-location": "~16.5.5"
+    "typescript": "^5.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

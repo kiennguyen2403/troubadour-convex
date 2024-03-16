@@ -4,31 +4,35 @@ import { Text } from 'react-native-paper';
 import { api } from '../../convex/_generated/api';
 import { useQuery } from 'convex/react';
 import { ImageButton } from '../components/imageButton';
+import { router } from 'expo-router';
 
 export default function Tab() {
     const events = useQuery(api.event.get);
 
     return (
         <View style={{
-            margin: "auto",
             width: "100%",
-            height: "100%"
+            height: "100%",
+            backgroundColor:"black"
         }}>
             <SafeAreaView>
                 <ScrollView style={{
                     width: "100%",
-                    height: "100%"
+                    height: "100%",
+                    
                 }}>
                     <View style={{
                         width: "100%",
 
                     }}>
                         <Text variant="titleLarge" style={{
+                            padding: 10,
                             width: "100%",
                             textAlign: "left"
                         }}> Live Events</Text>
                         <ScrollView 
                         horizontal={true} 
+                        centerContent={true}
                         showsHorizontalScrollIndicator={false}
                         bounces={true} 
                         style={{
@@ -43,7 +47,14 @@ export default function Tab() {
                                             src={event?.image}
                                             title={event?.name}
                                             description={event?.description}
-                                            onPress={() => { }} />
+                                            eventHandler={() => {
+                                                router.navigate({
+                                                    pathname: "/video",
+                                                    params: {
+                                                        id: event?._id
+                                                    }
+                                                });
+                                            }} />
                                     )
                                 })
                             }
