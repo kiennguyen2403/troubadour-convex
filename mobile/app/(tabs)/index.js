@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text } from 'react-native-paper';
 import { api } from '../../convex/_generated/api';
 import { useQuery } from 'convex/react';
-import { ImageButton } from '../components/imageButton';
+import { ImageButton } from '../../components/imageButton';
 import { router } from 'expo-router';
 
 export default function Tab() {
@@ -13,13 +13,13 @@ export default function Tab() {
         <View style={{
             width: "100%",
             height: "100%",
-            backgroundColor:"black"
+            backgroundColor: "black"
         }}>
             <SafeAreaView>
                 <ScrollView style={{
                     width: "100%",
                     height: "100%",
-                    
+
                 }}>
                     <View style={{
                         width: "100%",
@@ -30,15 +30,15 @@ export default function Tab() {
                             width: "100%",
                             textAlign: "left"
                         }}> Live Events</Text>
-                        <ScrollView 
-                        horizontal={true} 
-                        centerContent={true}
-                        showsHorizontalScrollIndicator={false}
-                        bounces={true} 
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                        }}>
+                        <ScrollView
+                            horizontal={true}
+                            centerContent={true}
+                            showsHorizontalScrollIndicator={false}
+                            bounces={true}
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                            }}>
                             {
                                 events?.map((event, index) => {
                                     return (

@@ -1,8 +1,7 @@
-import React from 'react';
-import { Dimensions, View } from "react-native";
-import { NodeCameraView } from "react-native-nodemediaclient";
-
-const { width, height } = Dimensions.get("window");
+import React, { useRef, useState } from 'react';
+import { View } from "react-native";
+import { LiveStreamView, LiveStreamMethods } from '@api.video/react-native-livestream';
+import RTMPPublisher from 'react-native-rtmp-publisher';
 
 const config = {
     cameraConfig: {
@@ -24,20 +23,44 @@ const config = {
 };
 
 export default function Tab() {
-    const cameraViewRef = React.useRef(null);
+    const ref = useRef(null);
+    const [streaming, setStreaming] = useState(false);
     const streamKey = '5b2a4a75-86c2-177c-72a2-45ab2b5e2583';
     const url = `rtmps://global-live.mux.com:443/app/${streamKey}`;
 
+    async function startStream() {
+        try {
+            await ref.current.startStream();
+            setStreaming(true);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     return (
         <View style={{ flex: 1 }}>
-            <NodeCameraView
-                style={{ width, height }}
-                ref={cameraViewRef}
-                outputUrl={url}
-                camera={config.cameraConfig}
-                audio={config.audioConfig}
-                video={config.videoConfig}
-                autopreview={true}
+            <RTMPPublisher
+                ref={ref}
+                streamURL={url}
+                streamName={streamKey}
+                onConnectionFailedRtmp={() => {
+                    console.log('Connection failed');
+                }}
+                onConnectionStartedRtmp={() => {
+
+                }}
+                onConnectionSuccessRtmp={() => {
+
+                }}
+                onDisconnectRtmp={() => {
+
+                }}
+                onNewBitrateRtmp={() => {
+
+                }}
+                onStreamStateChanged={(status) => {
+
+                }}
             />
         </View>
     );
