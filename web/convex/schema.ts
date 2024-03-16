@@ -80,4 +80,21 @@ export default defineSchema({
     genres: v.array(v.id("genre")),
     medias: v.array(v.id("media")),
   }),
+  analytic: defineTable({
+    userId: v.id("user"),
+    data: v.object({
+      views: v.array(
+        v.object({
+          value: v.number(),
+          dateTime: v.number(),
+        })
+      ),
+      likes: v.array(
+        v.object({
+          value: v.number(),
+          dateTime: v.number(),
+        })
+      ),
+    }),
+  }),
 });
