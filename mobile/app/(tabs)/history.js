@@ -2,7 +2,7 @@ import { View, ScrollView } from 'react-native';
 import { Text } from 'react-native-paper';
 import React, { useState, useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ImageButton from '../components/imageButton';
+import ImageButton from '../../components/imageButton';
 import { useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
 

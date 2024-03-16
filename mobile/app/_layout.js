@@ -1,16 +1,27 @@
+import React from 'react';
 import { Stack } from 'expo-router/stack';
 import ConvexClientProvider from '../convexProvider/ConvexClientProvider';
 import { View } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
+import { Provider as PaperProvider, Portal } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialIcons } from '@expo/vector-icons';
 import { theme } from './theme/theme';
 import { router } from 'expo-router';
+import { Modal, Text } from 'react-native-paper';
+import CustomModal from '../components/customModal';
+
 
 export default function AppLayout() {
+    const [visible, setVisible] = React.useState(false);
+
+    const hideModal = () => {
+        setVisible(false);
+    };
+
     return (
         <ConvexClientProvider>
             <PaperProvider theme={theme}>
+                <CustomModal isVisible={visible} setVisible={hideModal} />
                 <Stack
                     screenOptions={{
                         statusBarTranslucent: true,
@@ -38,7 +49,8 @@ export default function AppLayout() {
                                         justifyContent: 'space-between',
                                     }}>
                                         <MaterialIcons size={28} name="video-call" color="white" onPress={() => {
-                                            router.navigate('/stream');
+                                            console.log('pressed')
+                                            setVisible(true);
                                         }} />
                                         <MaterialIcons size={28} name="account-circle" color="white" onPress={() => {
                                             router.push('signin')

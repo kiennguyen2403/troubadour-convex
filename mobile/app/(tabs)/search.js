@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Searchbar } from 'react-native-paper';
 import { useQueries, useQuery } from 'convex/react';
 import { api } from '../../convex/_generated/api';
-import { GenreButton } from '../components/genreButton';
+import { GenreButton } from '../../components/genreButton';
 
 export default function Tab() {
     const genres = useQuery(api.genre.get, {});
