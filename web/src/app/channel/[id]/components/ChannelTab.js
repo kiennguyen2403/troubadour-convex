@@ -4,7 +4,7 @@ import { Box, Tabs, Tab } from "@mui/material";
 import ChannelMedias from "./ChannelMedias";
 import ChannelAnalytics from "./ChannelAnalytics";
 
-export default function ChannelTab({ medias, playlists, fullName, imageUrl }) {
+export default function ChannelTab({ medias, playlists, fullName, imageUrl, userId }) {
   const [tab, setTab] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -58,7 +58,7 @@ export default function ChannelTab({ medias, playlists, fullName, imageUrl }) {
         <ChannelMedias medias={playlists} artist={fullName} imageUrl={imageUrl} type="playlist" />
       </CustomTabPanel>
       <CustomTabPanel tab={tab} index={2}>
-        <ChannelAnalytics medias={medias} />
+        <ChannelAnalytics medias={medias} userId={userId} />
       </CustomTabPanel>
     </Box>
   );

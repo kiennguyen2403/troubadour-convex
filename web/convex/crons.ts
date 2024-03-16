@@ -1,13 +1,21 @@
 import { cronJobs } from "convex/server";
-import { internal, api } from "./_generated/api";
+import { api } from "./_generated/api";
 
 const crons = cronJobs();
+
+// crons.hourly(
+//   "Update analytics",
+//   {
+//     minuteUTC: 9,
+//   },
+//   api.analytic.postOrUpdate
+// );
 
 crons.daily(
   "Update analytics",
   {
-    hourUTC: 6, // (9:30am Pacific/10:30am Daylight Savings Pacific)
-    minuteUTC: 59,
+    hourUTC: 7, // (6pm Australia)
+    minuteUTC: 0,
   },
   api.analytic.postOrUpdate
 );

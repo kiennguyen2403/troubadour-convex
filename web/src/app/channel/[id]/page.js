@@ -30,6 +30,7 @@ export default function Channel({}) {
           playlists={playlists}
           fullName={fullName}
           imageUrl={imageUrl}
+          userId={userId ?? ""}
         />,
       ]}
     />
