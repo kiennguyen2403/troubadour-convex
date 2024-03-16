@@ -13,6 +13,8 @@ export default function AppLayout() {
             <PaperProvider theme={theme}>
                 <Stack
                     screenOptions={{
+                        statusBarTranslucent: true,
+                        statusBarAnimation: 'fade',
                         headerTitle: 'Troubadour',
                         headerStyle: {
                             backgroundColor: 'black',

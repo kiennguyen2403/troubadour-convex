@@ -22,9 +22,15 @@ export default function Tab() {
             let location = await Location.getCurrentPositionAsync({
                 accuracy: Location.Accuracy.Balanced,
                 enableHighAccuracy: true,
-                timeInterval: 5
             });
             setLocation(location);
+            if (mapRef.current)
+                mapRef.current.animateToRegion({
+                    latitude: location?.coords?.latitude ?? 37.78825,
+                    longitude: location?.coords?.longitude ?? -122.4324,
+                    latitudeDelta: location?.coords?.latitude ?? 37.78825,
+                    longitudeDelta: location?.coords?.longitude ?? -122.4324,
+                });
         })();
     }, []);
 
@@ -37,36 +43,10 @@ export default function Tab() {
                     latitudeDelta: 0.0922,
                     longitudeDelta: 0.0421,
                 }}
+                showsUserLocation={true}
                 ref={mapRef}
                 style={styles.map}>
-                {
-                    events?.map((event, index) => {
-                        return (
-                            <>
-                                <Marker
-                                    key={event?._id}
-                                    coordinate={{
-                                        latitude: event?.xCoordinate,
-                                        longitude: event?.yCoordinate
-                                    }}
-                                    title={event?.name}
-                                    description={event?.description}
-                                />
-                                <Circle
-                                    key={event?._id + "circle"}
-                                    center={{
-                                        latitude: event?.xCoordinate,
-                                        longitude: event?.yCoordinate
-                                    }}
-                                    radius={100}
-                                    fillColor={'rgba(0, 0, 255, 0.5)'}
-                                    strokeColor={'rgba(0, 0, 255, 0.5)'}
-                                    strokeWidth={2}
-                                />
-                            </>
-                        );
-                    })
-                }
+
             </MapView>
         </View>
     );
