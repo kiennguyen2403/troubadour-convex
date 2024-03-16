@@ -14,7 +14,9 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as analytic from "../analytic.js";
 import type * as comment from "../comment.js";
+import type * as crons from "../crons.js";
 import type * as event from "../event.js";
 import type * as eventActions from "../eventActions.js";
 import type * as genre from "../genre.js";
@@ -33,7 +35,9 @@ import type * as user from "../user.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  analytic: typeof analytic;
   comment: typeof comment;
+  crons: typeof crons;
   event: typeof event;
   eventActions: typeof eventActions;
   genre: typeof genre;

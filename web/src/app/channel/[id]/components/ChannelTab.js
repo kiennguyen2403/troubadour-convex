@@ -1,7 +1,8 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { Box, Tabs, Tab, Typography } from "@mui/material";
+import { Box, Tabs, Tab } from "@mui/material";
 import ChannelMedias from "./ChannelMedias";
+import ChannelAnalytics from "./ChannelAnalytics";
 
 export default function ChannelTab({ medias, playlists, fullName, imageUrl }) {
   const [tab, setTab] = useState(0);
@@ -57,7 +58,7 @@ export default function ChannelTab({ medias, playlists, fullName, imageUrl }) {
         <ChannelMedias medias={playlists} artist={fullName} imageUrl={imageUrl} type="playlist" />
       </CustomTabPanel>
       <CustomTabPanel tab={tab} index={2}>
-        Item Three
+        <ChannelAnalytics medias={medias} />
       </CustomTabPanel>
     </Box>
   );
