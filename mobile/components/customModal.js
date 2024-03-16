@@ -2,17 +2,17 @@ import { StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import * as React from 'react';
 import { View } from 'react-native';
-import { Modal, Portal, Text, Button, PaperProvider, TextInput } from 'react-native-paper';
+import { Modal, Portal, Text, Button, PaperProvider, TextInput, Checkbox } from 'react-native-paper';
 import MultiSteps from "react-native-multi-steps";
-
-
-
 
 export default function CustomModal({ isVisible, setVisible }) {
 
     const [title, setTitle] = React.useState('');
     const [description, setDescription] = React.useState('');
-    
+    const [ticketNumber, setTicketNumber] = React.useState('');
+    const [ticketPrice, setTicketPrice] = React.useState('');
+    const [isOffline, setIsOffline] = React.useState(false);
+
     const steps = [
         {
             name: 'Step 1',
@@ -67,7 +67,7 @@ export default function CustomModal({ isVisible, setVisible }) {
                     }}>
                         <TextInput
                             mode="outlined"
-                            label="Name"
+                            label="Title"
                             value={title}
                             placeholder="Title..."
                             onChangeText={(title) => setTitle(title)}
@@ -80,17 +80,63 @@ export default function CustomModal({ isVisible, setVisible }) {
                     }}>
                         <TextInput
                             mode="outlined"
-                            label="Name"
-                            value={title}
-                            placeholder="Title..."
-                            onChangeText={(title) => setTitle(title)}
+                            label="Description"
+                            value={description}
+                            placeholder="Description..."
+                            onChangeText={(description) => setTitle(description)}
                         />
                     </View>
                 </View>,
         },
         {
             name: 'Step 3',
-            component: <Text>Step 3</Text>,
+            component:
+                <View style={{
+                    display: 'flex',
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%',
+                }}>
+
+                    <View style={{
+                        width: "100%",
+                        padding: 10
+                    }}>
+                        <TextInput
+                            mode="outlined"
+                            label="Ticket Price"
+                            value={ticketPrice}
+                            placeholder="Ticket Price.."
+                            onChangeText={(description) => setTitle(description)}
+                        />
+                    </View>
+
+
+                    <View style={{
+                        width: "100%",
+                        padding: 10
+                    }}>
+                        <TextInput
+                            mode="outlined"
+                            label="Number of Tickets"
+                            value={ticketNumber}
+                            placeholder="Ticket Price.."
+                            onChangeText={(description) => setTitle(description)}
+                        />
+                    </View>
+
+                    <View style={{
+                        width: "100%",
+                        padding: 10
+                    }}>
+                        
+                        <Checkbox
+                            status={isOffline ? 'checked' : 'unchecked'}
+                            onPress={() => setIsOffline(!isOffline)}
+                        />
+                    </View>
+                </View>,
         },
     ];
 
