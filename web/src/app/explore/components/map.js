@@ -179,9 +179,12 @@ function Map() {
                                     {_event?.views} views
                                 </Typography>
                             </Stack>
-                            <Button onClick={() => {
-                                router.push("/event/" + _event?._id);
-                            }}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                    router.push("/event/" + _event?._id);
+                                }}>
                                 Go to event
                             </Button>
                         </Stack>
