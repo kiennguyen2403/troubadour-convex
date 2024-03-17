@@ -66,10 +66,13 @@ export default function Tab() {
                                         latitude: event?.xCoordinate,
                                         longitude: event?.yCoordinate
                                     }}
+                                
                                     radius={100}
-                                    fillColor={'rgba(0, 0, 255, 0.5)'}
-                                    strokeColor={'rgba(0, 0, 255, 0.5)'}
+                                    fillColor="rgba(255, 0, 0, 0.8)"
+                                    fillOpacity={0.35}
+                                    strokeColor="#FF0000"
                                     strokeWidth={2}
+
                                 />
                             </>
                         );

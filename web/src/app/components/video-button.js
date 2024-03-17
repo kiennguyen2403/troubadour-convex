@@ -15,7 +15,7 @@ export default function VideoButton({ image, title, description, eventHandler })
                 <CardMedia
                     component="img"
                     height="140"
-                    image="https://mui.com/static/images/cards/contemplative-reptile.jpg"
+                    image={image ?? "https://mui.com/static/images/cards/contemplative-reptile.jpg"}
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h6" component="div" style={{ textAlign: "start" }}>
