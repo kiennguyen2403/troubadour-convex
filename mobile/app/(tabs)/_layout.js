@@ -57,16 +57,6 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                // Name of the route to hide.
-                name="stream"
-                options={{
-                    headerShown: false,
-                    // This tab will no longer show up in the tab bar.
-                    href: null,
-                }}
-            />
-
-            <Tabs.Screen
                 name="history"
                 options={{
                     title: 'History',

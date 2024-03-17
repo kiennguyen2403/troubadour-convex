@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useref, createRef } from 'react';
 import { useQuery } from 'convex/react';
 import { View, Text, StyleSheet } from 'react-native';
-import MapView, { Marker, Circle } from 'react-native-maps';
+import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import { api } from '../../convex/_generated/api';
 import * as Location from 'expo-location';
 
@@ -37,6 +37,7 @@ export default function Tab() {
     return (
         <View style={styles.container}>
             <MapView
+                provider={PROVIDER_GOOGLE}
                 initialRegion={{
                     latitude: location?.coords?.latitude ?? 37.78825,
                     longitude: location?.coords?.longitude ?? -122.4324,
