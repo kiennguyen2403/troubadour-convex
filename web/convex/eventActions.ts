@@ -84,7 +84,7 @@ export const createEvent = action({
         playbackID: streamKey.playback_ids ? streamKey.playback_ids[0].id : "",
       });
 
-      return streamKey.id;
+      return streamKey.stream_key;
     } catch (e) {
       console.log(e);
       return "failure";
