@@ -39,10 +39,13 @@ export const get = query({
 });
 
 export const getById = query({
-  args: { id: v.id("media") },
+  args: { id: v.string() },
   handler: async (ctx, { id }) => {
     try {
-      return await ctx.db.get(id);
+      return await ctx.db
+        .query("media")
+        .filter((q) => q.eq(q.field("_id"), id))
+        .first();
     } catch (e) {
       console.log(e);
       return "failure";
