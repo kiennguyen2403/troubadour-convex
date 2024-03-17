@@ -2,6 +2,11 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  payments: defineTable({
+    ticketID: v.string(),
+    stripeId: v.optional(v.string()),
+    confirmTicketID: v.optional(v.string()),
+  }).index("stripeId", ["stripeId"]),
   event: defineTable({
     name: v.string(),
     description: v.string(),

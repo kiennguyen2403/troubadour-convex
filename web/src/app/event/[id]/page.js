@@ -17,21 +17,28 @@ import {
   CardActions,
 } from "@mui/material";
 import ClippedDrawer from "@/app/components/header";
-import useStoreUserEffect from "@/convex/useStoreUserEffect";
 import { useSelector } from "react-redux";
 import { selectUserID } from "@/redux/auth-slice";
+import useStoreUserEffect from "@/convex/useStoreUserEffect";
+import { LoadingButton } from '@mui/lab';
 
 
 
 export default function Event({ params }) {
+
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { id } = params;
-  const userId = useSelector(selectUserID);
+  // const userId = useSelector(selectUserID);
+  const userId = useStoreUserEffect();
   console.log("userId:" + userId);
   const isUserPurchase = useQuery(api.event.isUserPurchaseTicket, {
     eventID: id ?? "",
     userID: userId ?? "jd7287bzyqv5smd4365qdfv6e56n1ahd",
   });
+
+  console.log("isUserPurchase:" + isUserPurchase);
+  const buyTicket = useAction(api.eventActions.buyTicket);
   const event = useQuery(api.event.getById, { id });
 
   const noEvent = (
@@ -82,7 +89,7 @@ export default function Event({ params }) {
             }}
           />
           <Typography variant="h3">{event?.name}</Typography>
-    
+
         </Stack>
         <Divider />
         <Stack spacing={50} direction="row">
@@ -133,7 +140,7 @@ export default function Event({ params }) {
             }}>
               <CardContent>
                 <Typography variant="h5">Tickets</Typography>
-                <Typography variant="body1">{"$ " + event?.price}</Typography>
+                <Typography variant="body1">{"$ " + event?.fee ?? "10"}</Typography>
               </CardContent>
               <CardActions
                 sx={{
@@ -143,7 +150,8 @@ export default function Event({ params }) {
                 }}
               >
                 {!isUserPurchase ? (
-                  <Button
+                  <LoadingButton
+                    loading={isLoading}
                     sx={{
                       width: "100%",
                     }}
@@ -152,14 +160,18 @@ export default function Event({ params }) {
                     color="primary"
                     onClick={async () => {
                       try {
-                        router.push("/payment/" + event._id);
+                        setIsLoading(true);
+                        const paymentUrl = await buyTicket({ id: id, user: userId });
+                        console.log(paymentUrl);
+                        setIsLoading(false);
+                        window.location.href = paymentUrl;
                       } catch (error) {
                         console.error(error);
                       }
                     }}
                   >
                     Purchase ticket
-                  </Button>
+                  </LoadingButton>
                 ) : (
                   <Button
                     sx={{
