@@ -77,7 +77,7 @@ type Event = {
 };
 
 export const getByUserID = query({
-  args: { userID: v.id("user") },
+  args: { userID: v.string() },
   handler: async (ctx, args) => {
     try {
       console.log(typeof args.userID);
