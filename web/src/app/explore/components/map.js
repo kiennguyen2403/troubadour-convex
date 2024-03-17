@@ -150,57 +150,52 @@ function Map() {
         );
       })}
 
-      {infoWindowOpen && (
-        <InfoWindow
-          position={{
-            lat: _event?.xCoordinate,
-            lng: _event?.yCoordinate,
-          }}
-          onCloseClick={() => setInfoWindowOpen(false)}
-        >
-          <Box>
-            <Stack
-              direction="column"
-              spacing={2}
-              sx={{
-                padding: "1rem",
-              }}
-            >
-              <Typography variant="h6" component="div" color={"#000"}>
-                {_event?.name}
-              </Typography>
-              <Box>
-                <Chip
-                  label={_event?.status}
-                  color={_event?.status == "start" ? "success" : "warning"}
-                  variant="outlined"
-                  size="small"
-                />
-              </Box>
-              <Typography variant="body2" component="div" color={"#000"}>
-                {_event?.description}
-              </Typography>
-              <Stack direction="row" spacing={2}>
-                <VisibilityIcon color="primary" />
-                <Typography variant="body2" component="div" color={"#000"}>
-                  {_event?.views} views
-                </Typography>
-              </Stack>
-              <Button
-                onClick={() => {
-                  router.push("/event/" + _event?._id);
-                }}
-              >
-                Go to event
-              </Button>
-            </Stack>
-          </Box>
-        </InfoWindow>
-      )}
-    </GoogleMap>
-  ) : (
-    <></>
-  );
+            {infoWindowOpen && (
+                <InfoWindow
+                    position={{
+                        lat: _event?.xCoordinate,
+                        lng: _event?.yCoordinate
+                    }}
+                    onCloseClick={() => setInfoWindowOpen(false)}
+                >
+                    <Box>
+                        <Stack direction="column" spacing={2} sx={{
+                            padding: "1rem"
+                        }}>
+                            <Typography variant="h6" component="div" color={"#000"}>
+                                {_event?.name}
+                            </Typography>
+                            <Box>
+                                <Chip
+                                    label={_event?.status}
+                                    color={_event?.status == "start" ? "success" : "warning"}
+                                    variant='outlined'
+                                    size='small'
+                                />
+                            </Box>
+                            <Typography variant="body2" component="div" color={"#000"}>
+                                {_event?.description}
+                            </Typography>
+                            <Stack direction="row" spacing={2}>
+                                <VisibilityIcon color="primary" />
+                                <Typography variant="body2" component="div" color={"#000"}>
+                                    {_event?.views} views
+                                </Typography>
+                            </Stack>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => {
+                                    router.push("/event/" + _event?._id);
+                                }}>
+                                Go to event
+                            </Button>
+                        </Stack>
+                    </Box>
+                </InfoWindow>
+            )}
+        </GoogleMap>
+    ) : <></>
 }
 
 export default React.memo(Map);
