@@ -35,6 +35,7 @@ export default function AppLayout() {
                     }}>
                     <Stack.Screen name="signin" options={{ headerShown: false }} />
                     <Stack.Screen name="signup" options={{ headerShown: false }} />
+                    <Stack.Screen name="stream" options={{ headerShown: false }} />
                     <Stack.Screen
                         name="(tabs)"
                         options={{
@@ -49,7 +50,6 @@ export default function AppLayout() {
                                         justifyContent: 'space-between',
                                     }}>
                                         <MaterialIcons size={28} name="video-call" color="white" onPress={() => {
-                                            console.log('pressed')
                                             setVisible(true);
                                         }} />
                                         <MaterialIcons size={28} name="account-circle" color="white" onPress={() => {

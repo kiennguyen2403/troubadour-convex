@@ -30,8 +30,8 @@ export default function CustomModal({ isVisible, setVisible }) {
                         mode='outlined'
                         onPress={() => {
                             // navigation.navigate('Stream');
-                            router.push('stream')
-
+                            setVisible(false);
+                            router.push('/stream')
                         }}
                         style={{
                             marginBottom: 20

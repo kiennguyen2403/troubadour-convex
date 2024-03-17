@@ -9,7 +9,7 @@ import app from '../../package.json'
 
 export default function Tab() {
     const { id } = useLocalSearchParams();
-    const event = useQuery(api.event.getById, { id: id });
+    // const event = useQuery(api.event.getById, { id: id });
 
     const MuxVideo = muxReactNativeVideo(Video);
 
