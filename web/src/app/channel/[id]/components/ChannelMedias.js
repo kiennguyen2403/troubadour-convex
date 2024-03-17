@@ -60,10 +60,15 @@ export default function ChannelMedias({ medias, artist, imageUrl, type }) {
                 <Avatar alt={artist} src={imageUrl} />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary={item.title} secondary={artist ? artist : "N/A"} />
+            <ListItemText
+              primary={item.title}
+              secondary={artist ? artist : "N/A"}
+            />
             {type === "video" && (
               <ListItemIcon>
-                <PlayArrowIcon style={{ background: "#73726f", borderRadius: 12 }} />
+                <PlayArrowIcon
+                  style={{ background: "#73726f", borderRadius: 12 }}
+                />
               </ListItemIcon>
             )}
           </ListItem>

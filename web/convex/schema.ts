@@ -37,6 +37,7 @@ export default defineSchema({
     playlists: v.array(v.id("playlist")),
     genres: v.array(v.id("genre")),
     medias: v.array(v.id("media")),
+    events: v.array(v.id("event")),
   }),
   comment: defineTable({
     content: v.string(),

@@ -24,10 +24,14 @@ import {
   selectCurrentMediaArtist,
   selectCurrentMediaTitle,
 } from "../../redux/media-slice";
+import { useMutation } from "convex/react";
+import { selectUserID } from "@/redux/auth-slice";
+import { api } from "../../../convex/_generated/api";
 
 export default function MediaControl() {
   const audioRef = useRef(null);
   const dispatch = useDispatch();
+  const user = useSelector(selectUserID);
   const medias = useSelector(selectMedias);
   const media = useSelector(selectCurrentMedia);
   const isPlaying = useSelector(selectIsPlaying);
@@ -38,16 +42,22 @@ export default function MediaControl() {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
 
+  const updateHistory = useMutation(api.history.updateMediaHistory);
+
   const handleVolumeChange = (event, newValue) => {
     setVolume(newValue);
     audioRef.current.volume = newValue / 100;
   };
 
-  const handlePlay = () => {
+  const handlePlay = async () => {
     if (medias.length === 0) return;
     dispatch(setIsPlaying(false));
     if (audioRef === null) return;
     audioRef.current.play();
+    await updateHistory({
+      userID: user,
+      media: media,
+    });
   };
 
   const handlePause = () => {

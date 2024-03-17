@@ -26,6 +26,7 @@ export default function ({ params }) {
   const { id } = params;
   const router = useRouter();
   const userId = useStoreUserEffect();
+  const userID = useSelector(selectUserID);
 
   const event = useQuery(api.event.getById, { id });
 
@@ -36,11 +37,32 @@ export default function ({ params }) {
     userID: userId ?? "",
   });
 
-  const player = (
-    <CustomVideo playbackId={event?.playbackID} title={event?.name || ""} description={event?.description || ""} />
+  const updateHistory = useMutation(api.history.updateEventHistory);
+
+  useEffect(
+    {
+      async if(isUserPurchaseTicket) {
+        // const updateMediaHistory = useMutation(api.history.updateMediaHistory,{userID: userID, media: event.})
+        await updateHistory({
+          eventID: id,
+          userID: userId ?? "",
+        });
+      },
+    },
+    [isUserPurchaseTicket]
   );
 
-  const commentSection = <CommentSection eventId={id} userId={userId} comments={comments} />;
+  const player = (
+    <CustomVideo
+      playbackId={event?.playbackID}
+      title={event?.name || ""}
+      description={event?.description || ""}
+    />
+  );
+
+  const commentSection = (
+    <CommentSection eventId={id} userId={userId} comments={comments} />
+  );
 
   const dialog = (
     <Dialog
@@ -78,7 +100,12 @@ export default function ({ params }) {
   if (!userId || isUserPurchaseTicket === undefined) {
     return (
       <div
-        style={{ display: "flex", justifyContent: "center", height: "100vh", alignItems: "center" }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          height: "100vh",
+          alignItems: "center",
+        }}
       >
         <Loading />
       </div>
