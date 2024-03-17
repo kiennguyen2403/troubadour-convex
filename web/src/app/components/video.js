@@ -6,12 +6,12 @@ export default function CustomVideo({ type = "ll-live", playbackId, title, descr
         <Card>
             <CardMedia>
                 <MuxPlayer
-                    streamType={type} // use "ll-live" for low-latency streams
+                    streamType="live" // use "ll-live" for low-latency streams
                     playbackId={playbackId}
                     metadata={{
                         video_id: "video-id-54321",
-                        video_title: "Test video title",
-                        viewer_user_id: "user-id-007",
+                        video_title: title,
+                        viewer_user_id: description,
                     }}
                     style={{height: '60vh'}}
                 />

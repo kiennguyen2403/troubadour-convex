@@ -35,7 +35,7 @@ export default function Tab() {
     const [cameraPermission, requestCameraPermission] = Camera.useCameraPermissions();
     const [audioPermission, requestAudioPermission] = Audio.usePermissions();
     const [bluetoothPermission, requestBlueToothPermission] = useState(null);
-    const STREAM_NAME = 'adfb3f31-95f5-4034-a77f-04caa340ab00';
+    const STREAM_NAME = "527ed924-91ab-8ed7-e7bd-251b6708e8e1";
     const STREAM_URL = 'rtmp://global-live.mux.com:5222/app';
 
     const handleOnConnectionFailed = (data) => {
