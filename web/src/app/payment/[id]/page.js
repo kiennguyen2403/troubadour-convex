@@ -57,6 +57,7 @@ export default function Payment({ params }) {
 
         } catch (error) {
             setIsLoading(false);
+            router.push("/event/" + id);
             console.log(error);
         }
     }
