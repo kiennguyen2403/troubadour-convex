@@ -39,16 +39,18 @@ export default function ({ params }) {
 
   const updateHistory = useMutation(api.history.updateEventHistory);
 
-  useEffect(
-    {
-      async if(isUserPurchaseTicket) {
+  useEffect(() => {
+    const event = async () => {
+      if (isUserPurchaseTicket) {
         // const updateMediaHistory = useMutation(api.history.updateMediaHistory,{userID: userID, media: event.})
         await updateHistory({
-          eventID: id,
+          event: id,
           userID: userId ?? "",
         });
-      },
-    },
+      }
+    }
+    event();
+  },
     [isUserPurchaseTicket]
   );
 
