@@ -56,10 +56,11 @@ export default function MediaControl() {
     dispatch(setIsPlaying(!isPlaying));
     if (audioRef === null) return;
     audioRef.current.play();
-    await updateHistory({
-      userID: user,
-      media: mediaId,
-    });
+    if (user && mediaId)
+      await updateHistory({
+        userID: user,
+        media: mediaId,
+      });
   };
 
   const handlePause = () => {

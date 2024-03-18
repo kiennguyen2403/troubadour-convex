@@ -125,7 +125,7 @@ export default function Home() {
                 image={item?.image ?? "https://picsum.photos/500?random=" + index}
                 title={item.title}
                 artist={item.description}
-                eventHandler={() => getAudio(item.url, item.title, item.artist)}
+                eventHandler={() => getAudio(item.fileUrl, item.title)}
               />
             </Grid>
           ))
@@ -165,7 +165,7 @@ export default function Home() {
                 image={item?.image ?? "https://picsum.photos/500?random=" + index}
                 title={item.title}
                 artist={item.description}
-                eventHandler={() => getAudio(item.url, item.title, item.artist)}
+                eventHandler={() => getAudio(item.fileUrl, item.title)}
               />
             </Grid>
           ))
