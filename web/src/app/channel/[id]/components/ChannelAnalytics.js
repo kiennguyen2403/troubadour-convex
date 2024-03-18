@@ -152,11 +152,3 @@ function calculateMediaStats(medias) {
     }
   );
 }
-
-
-
-function getAnalyticData(analytic) {
-  const viewsData = analytic.data.views.map(({ value }) => value);
-}
-
-function getAnalyticLabels(analytic) {}

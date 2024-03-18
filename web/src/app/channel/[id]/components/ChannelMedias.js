@@ -17,6 +17,7 @@ import {
   setMedias,
   setCurrentMediaArtist,
   setCurrentMediaTitle,
+  setCurrentMediaId,
 } from "@/redux/media-slice";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -30,7 +31,8 @@ export default function ChannelMedias({ medias, artist, imageUrl, type }) {
     try {
       dispatch(setMedias([media.fileUrl]));
       dispatch(setIsPlaying(!isPlaying));
-      dispatch(setCurrentMedia(media._id));
+      dispatch(setCurrentMedia(0));
+      dispatch(setCurrentMediaId(media._id));
       dispatch(setCurrentMediaTitle(media.name));
       dispatch(setCurrentMediaArtist(artist));
     } catch (err) {
@@ -46,7 +48,7 @@ export default function ChannelMedias({ medias, artist, imageUrl, type }) {
           onClick={() => {
             switch (type) {
               case "video":
-                getAudio(item, item.name);
+                getAudio(item, artist);
                 break;
               case "playlist":
                 router.push("/playlist/" + item._id);
