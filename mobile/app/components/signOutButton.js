@@ -5,25 +5,15 @@ import { TouchableOpacity, Text, Image, StyleSheet } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 const SignOut = ({ image }) => {
   const { isLoaded, signOut } = useAuth();
-  console.log(image);
   if (!isLoaded) {
     return null;
   }
   return (
     <View>
       <TouchableOpacity style={styles.button} onPress={() => signOut()}>
-        {/* <Image source={image} style={styles.image} /> */}
-        <Text style={styles.text}>Sign Out</Text>
+        <Image src={image} style={styles.image}></Image>
+        {/* <Text style={styles.text}>Sign Out</Text> */}
       </TouchableOpacity>
-      {/* <MaterialIcons
-        size={28}
-        name="account-circle"
-        color="white"
-        image={image}
-        onPress={() => {
-          signOut();
-        }}
-      /> */}
     </View>
   );
 };
@@ -32,11 +22,10 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "blue", // Example color, you can change this
-    paddingVertical: 10, // Adjust the vertical padding to make the button smaller
-    paddingHorizontal: 5, // Adjust the horizontal padding to make the button smaller
+    paddingVertical: 5,
+    paddingHorizontal: 5,
     borderRadius: 20,
-    marginLeft: 5, // Adjust the borderRadius to make the button rounded
+    marginLeft: 5,
   },
   text: {
     color: "#fff",
@@ -47,7 +36,8 @@ const styles = StyleSheet.create({
   image: {
     width: 20, // Adjust as needed
     height: 20, // Adjust as needed
-    resizeMode: "contain",
+    resizeMode: "cover",
+    borderRadius: 50,
   },
 });
 

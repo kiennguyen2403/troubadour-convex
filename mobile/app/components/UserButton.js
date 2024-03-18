@@ -7,13 +7,11 @@ import { useConvexAuth } from "convex/react";
 import SignOut from "./signOutButton";
 
 function UserButton() {
-  const user = useConvexAuth();
   const userDetails = useUser();
-  console.log(userDetails);
   return (
     <>
       {userDetails.isSignedIn ? (
-        <SignOut image={userDetails.imageUrl}></SignOut>
+        <SignOut image={userDetails.user.imageUrl}></SignOut>
       ) : (
         <MaterialIcons
           size={28}

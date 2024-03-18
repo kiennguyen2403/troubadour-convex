@@ -24,7 +24,7 @@ const tokenCache = {
 };
 
 const convex = new ConvexReactClient(
-  "https://honorable-dolphin-640.convex.cloud",
+  "https://industrious-minnow-226.convex.cloud",
   {
     unsavedChangesWarning: false,
   }
