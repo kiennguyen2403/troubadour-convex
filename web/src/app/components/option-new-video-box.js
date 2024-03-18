@@ -28,8 +28,8 @@ export default function OptionNewVideoBox({ setIsOptionOpen, setIsMultipleFormOp
             bgcolor: '#19191A',
             position: "fixed",
             zIndex: 100000,
-            marginTop: "2.3%",
-            right: "4%",
+            marginTop: "3rem",
+            right: "6rem",
             borderRadius: "10px",
             boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.75)"
         }}>

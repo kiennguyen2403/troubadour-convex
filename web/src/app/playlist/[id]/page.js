@@ -2,9 +2,6 @@
 import { React, useEffect, useState } from "react";
 import ClippedDrawer from "@/app/components/header";
 import VideoButton from "@/app/components/video-button";
-import { useRouter } from "next/navigation";
-import axios from "axios";
-// import { api } from "../../api/api";
 import {
   Divider,
   Grid,
@@ -27,135 +24,103 @@ import SearchBar from "@/app/components/search";
 import Avatar from "@mui/material/Avatar";
 import CardMedia from "@mui/material/CardMedia";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PublicIcon from "@mui/icons-material/Public";
+import LockIcon from "@mui/icons-material/Lock";
 import DetailModal from "./components/detail-modal";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { useSelector } from "react-redux";
 import { selectUserID } from "@/redux/auth-slice";
+import ErrorPage from "next/error";
+import { useUser } from "@clerk/clerk-react";
+import millisecondsToDdMm from "@/utils/millisecondsToDdMm";
+import {
+  setCurrentMedia,
+  setIsPlaying,
+  selectIsPlaying,
+  setMedias,
+  setCurrentMediaArtist,
+  setCurrentMediaTitle,
+  setCurrentMediaId,
+} from "@/redux/media-slice";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function Playlist({ params }) {
   const id = params.id;
-  const router = useRouter();
-  const [title, setTitle] = useState("Default Title");
-  const [description, setDescription] = useState("Default Description");
-  const [image, setImage] = useState(
-    "https://mui.com/static/images/cards/contemplative-reptile.jpg"
-  );
-  const [assets, setAssets] = useState([]);
-  const user = useSelector(selectUserID);
-  const [searchAssets, setSearchAssets] = useState([]);
-  const [search, setSearch] = useState("");
+  const userId = useSelector(selectUserID);
+  const user = useUser().user;
+  const { fullName } = user ?? {};
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const dispatch = useDispatch();
+  const isPlaying = useSelector(selectIsPlaying);
+
   const updateHistory = useMutation(api.history.updatePlaylistHistory);
+  const playlist = useQuery(api.playlist.getById, { id });
+  const assets = playlist?.medias ?? [];
 
-  const getPlayList = async () => {
+  const getAudio = (media, artist = "Unknown") => {
     try {
-      await updateHistory({ userID: user, playlist: id });
-      // const result = await axios.get(api.media);
-      if (result.data) {
-        setTitle(result.data.title);
-        setDescription(result.data.description);
-        setImage(result.data.image);
-        setAssets(result.data.assets);
+      dispatch(setMedias([media.fileUrl]));
+      dispatch(setIsPlaying(!isPlaying));
+      dispatch(setCurrentMedia(0));
+      dispatch(setCurrentMediaId(media._id));
+      dispatch(setCurrentMediaTitle(media.name));
+      dispatch(setCurrentMediaArtist(artist));
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    const updatePlaylistHistory = async () => {
+      if (playlist && userId) {
+        await updateHistory({ userID: userId, playlist: id });
       }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getSearch = async () => {
-    // const medias = await axios.get(api.media.search, {
-    //     params: {
-    //         query: search
-    //     },
-    //     withCredentials: true,
-    //     headers: {
-    //         Accept: "application/json",
-    //         "Content-Type": "application/json",
-    //         "Access-Control-Allow-Origin": "*",
-    //         "Access-Control-Allow-Credentials": true,
-    //         // Authorization: "Bearer " + token,
-    //     }
-    // });
-    setSearchAssets(medias.data);
-  };
-
-  const handleUpdatePlaylist = async () => {
-    try {
-      // const result = await axios.put(api.media, {
-      //     title: title,
-      //     description: description,
-      //     image: image,
-      //     assets: assets
-      // });
-      // if (result.data) {
-      //     console.log(result.data);
-      // }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleAddAsset = async (item) => {
-    setAssets([...assets, item]);
-  };
-
-  useEffect(() => {
-    getPlayList();
-  }, []);
-
-  useEffect(() => {
-    if (search === null || search === "") {
-      return;
-    }
-    getSearch();
-  }, [search]);
+    };
+    updatePlaylistHistory();
+  }, [playlist, userId]);
 
   const Information = (
-    <Box sx={{ flexGrow: 1, opacity: "0.5" }}>
+    <Box sx={{ flexGrow: 1, marginLeft: "2rem" }}>
       <Grid container>
-        <Grid item xs={2}>
+        <Grid item xs={2} sx={{ minWidth: "10rem" }}>
           <Avatar
-            alt="Remy Sharp"
-            src="/static/images/avatar/1.jpg"
+            alt={playlist?.name ?? "Name"}
+            src={"url"}
             sx={{ width: "10rem", height: "10rem" }}
           />
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={6}>
           <Typography
             variant="h4"
             component="div"
             gutterBottom
             textAlign="left"
-            marginLeft="2%"
-            marginTop="8%"
-            onClick={() => {
-              setIsEditOpen(true);
-              console.log("hello");
-            }}
+            marginLeft="2rem"
+            marginTop="2rem"
           >
-            Title
+            {playlist?.name}
           </Typography>
           <Typography
             variant="body2"
             gutterBottom
             textAlign="left"
-            marginLeft="2%"
-            onClick={() => {
-              setIsEditOpen(true);
-            }}
+            marginLeft="2rem"
+            sx={{ display: "flex", alignItems: "center", gap: "5px" }}
           >
-            Description
+            {playlist?.privacy == "public" ? (
+              <>
+                <PublicIcon /> Public
+              </>
+            ) : playlist?.privacy == "private" ? (
+              <>
+                <LockIcon /> Private
+              </>
+            ) : (
+              <></>
+            )}
           </Typography>
         </Grid>
       </Grid>
-      <DetailModal
-        isOpen={isEditOpen}
-        setIsOpen={setIsEditOpen}
-        title={title}
-        description={description}
-        image={image}
-      />
     </Box>
   );
 
@@ -171,7 +136,7 @@ export default function Playlist({ params }) {
                 <TableCell align="left">#</TableCell>
                 <TableCell align="left">Title</TableCell>
                 <TableCell align="left">Date added</TableCell>
-                <TableCell align="left">Duration</TableCell>
+                <TableCell align="left"></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -180,7 +145,7 @@ export default function Playlist({ params }) {
                   key={index}
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   hover
-                  onClick={() => {}}
+                  onClick={() => getAudio(item, fullName)}
                 >
                   <TableCell align="left">{index + 1}</TableCell>
                   <TableCell align="left">
@@ -191,8 +156,8 @@ export default function Playlist({ params }) {
                           height={50}
                           width={50}
                           image={
-                            item.image
-                              ? item.image
+                            item.imageUrl
+                              ? item.imageUrl
                               : "https://mui.com/static/images/cards/contemplative-reptile.jpg"
                           }
                           alt="green iguana"
@@ -205,34 +170,25 @@ export default function Playlist({ params }) {
                           textAlign="left"
                           marginLeft="2%"
                         >
-                          {item.title}
+                          {item.name}
                         </Typography>
-                        <Typography
-                          variant="caption"
-                          gutterBottom
-                          textAlign="left"
-                          marginLeft="2%"
-                        >
-                          {item.artist ? item.artist : "N/A"}
+                        <Typography variant="caption" gutterBottom textAlign="left" marginLeft="2%">
+                          {fullName}
                         </Typography>
                       </Grid>
                     </Grid>
                   </TableCell>
-                  <TableCell align="left">{item.date}</TableCell>
-                  <TableCell align="left">{item.duration}</TableCell>
+                  <TableCell align="left">{millisecondsToDdMm(item._creationTime)}</TableCell>
+                  <TableCell>
+                    <PlayArrowIcon style={{ background: "#73726f", borderRadius: 12 }} />
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       ) : (
-        <Typography
-          variant="h6"
-          gutterBottom
-          textAlign="start"
-          marginTop="5%"
-          marginBottom="5%"
-        >
+        <Typography variant="h6" gutterBottom textAlign="start" marginTop="5%" marginBottom="5%">
           No assets in this playlist
         </Typography>
       )}
@@ -241,49 +197,35 @@ export default function Playlist({ params }) {
 
   const Adds = (
     <Box sx={{ flexGrow: 1 }}>
-      <Typography
-        variant="h6"
-        gutterBottom
-        textAlign="start"
-        marginTop="2%"
-        marginBottom="2%"
-      >
+      <Typography variant="h6" gutterBottom textAlign="start" marginTop="2%" marginBottom="2%">
         Let's find something for your playlist
       </Typography>
-      <SearchBar setValue={setSearch} value={search} />
-      {searchAssets.length > 0 ? (
+      {/* <SearchBar setValue={setSearch} value={search} /> */}
+      {/* {searchAssets.length > 0 ? (
         <List sx={{ width: "100%", bgcolor: "background.pater" }}>
           {searchAssets.map((item) => (
             <ListItemButton>
               <ListItem>
                 <ListItemAvatar>
                   <Avatar>
-                    <Avatar
-                      alt="Remy Sharp"
-                      src="/static/images/avatar/1.jpg"
-                    />
+                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                   </Avatar>
                 </ListItemAvatar>
-                <ListItemText
-                  primary={item.title}
-                  secondary={item.artist ? item.artist : "N/A"}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleAddAsset(item)}
-                >
+                <ListItemText primary={item.title} secondary={item.artist ? item.artist : "N/A"} />
+                <Button variant="contained" color="primary" onClick={() => handleAddAsset(item)}>
                   Add
                 </Button>
               </ListItem>
             </ListItemButton>
           ))}
         </List>
-      ) : null}
+      ) : null} */}
     </Box>
   );
 
-  return (
-    <ClippedDrawer Component={[Information, Divide, Assets, Divide, Adds]} />
+  return playlist === null ? (
+    <ErrorPage statusCode={404} />
+  ) : (
+    <ClippedDrawer Component={[Information, Divide, Assets, Divide]} />
   );
 }

@@ -44,7 +44,7 @@ export default function Tab() {
                                     return (
                                         <ImageButton
                                             key={index}
-                                            src={event?.image || "https://picsum.photos/200?" + index}
+                                            src={event?.image}
                                             title={event?.name}
                                             description={event?.description}
                                             eventHandler={() => {

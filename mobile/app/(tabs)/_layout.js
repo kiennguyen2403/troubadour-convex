@@ -1,8 +1,8 @@
-import React from 'react';
-import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
-import { Tabs, Stack } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
-
+import React from "react";
+import { MaterialCommunityIcons, Feather } from "@expo/vector-icons";
+import { Tabs, Stack } from "expo-router";
+import { LinearGradient } from "expo-linear-gradient";
+import useStoreUserEffect from "../../clerk/useStoreUserEffect";
 
 export default function TabLayout() {
     return (
