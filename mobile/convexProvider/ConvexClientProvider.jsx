@@ -2,10 +2,8 @@ import { ConvexReactClient } from "convex/react";
 import { dark } from "@clerk/themes";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
-import useStoreUserEffect from "../clerk/useStoreUserEffect";
-
-import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
+
 const tokenCache = {
   async getToken(key) {
     try {

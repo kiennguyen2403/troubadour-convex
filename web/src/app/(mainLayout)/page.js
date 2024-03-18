@@ -1,5 +1,5 @@
 "use client";
-import { React, useEffect, useState } from "react";
+import { React, use, useEffect, useState } from "react";
 import ClippedDrawer from "../components/header";
 import VideoButton from "../components/video-button";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -33,13 +33,19 @@ export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const live = useQuery(api.event.get, {});
-  const custom = [];
+  let custom = []
+  if (userID)
+    custom = useQuery(api.media.getByUserId, { userId: userID });
+  else
+    custom = useQuery(api.media.get, {});
+
+  const top = useQuery(api.media.get, {});
   const recent = [];
-  const top = [];
-  
+
   const getMedia = (videoID) => {
     router.push("/video/" + videoID);
   };
+
 
   const getAudio = (mediaURL, title, artist = "Unknown") => {
     try {
@@ -71,10 +77,10 @@ export default function Home() {
       </Typography>
       <Grid container spacing={2}>
         {live?.length > 0 ? (
-          live.map((item, index ) => (
+          live.map((item, index) => (
             <Grid item xs={4}>
               <VideoButton
-                image={item?.image ?? "https://picsum.photos/500?random="+ index }
+                image={item?.image ?? "https://picsum.photos/500?random=" + index}
                 title={item.name}
                 description={item.description}
                 eventHandler={() => {
@@ -112,11 +118,11 @@ export default function Home() {
         Custom
       </Typography>
       <Grid container spacing={2}>
-        {custom.length > 0 ? (
-          custom.map((item) => (
+        {custom?.length > 0 ? (
+          custom.map((item, index) => (
             <Grid item xs={4}>
               <AudioButton
-                image={item.image}
+                image={item?.image ?? "https://picsum.photos/500?random=" + index}
                 title={item.title}
                 artist={item.description}
                 eventHandler={() => getAudio(item.url, item.title, item.artist)}
@@ -153,10 +159,10 @@ export default function Home() {
       </Typography>
       <Grid container spacing={2}>
         {recent.length > 0 ? (
-          recent.map((item) => (
+          recent.map((item, index) => (
             <Grid item xs={4}>
               <AudioButton
-                image={item.image}
+                image={item?.image ?? "https://picsum.photos/500?random=" + index}
                 title={item.title}
                 artist={item.description}
                 eventHandler={() => getAudio(item.url, item.title, item.artist)}
@@ -192,11 +198,11 @@ export default function Home() {
         Top Trending
       </Typography>
       <Grid container spacing={2}>
-        {top.length > 0 ? (
-          top.map((item) => (
+        {top?.length > 0 ? (
+          top.map((item, index) => (
             <Grid item xs={4}>
               <AudioButton
-                image={item.image}
+                image={item?.image ?? "https://picsum.photos/500?random=" + index}
                 title={item.title}
                 artist={item.description}
                 eventHandler={() => getAudio(item.url, item.title, item.artist)}
@@ -226,7 +232,7 @@ export default function Home() {
   return (
     <ClippedDrawer
       // Component={isLoading ? [Loading] : [LiveStream, Custom, Recent, Top]}
-      Component={isLoading ? [Loading] : [LiveStream]}
+      Component={isLoading ? [Loading] : [LiveStream, Custom, Top]}
     />
   );
 }

@@ -54,7 +54,10 @@
         {
           "android": {
             "packagingOptions": {
-              "pickFirst": ["lib/**/libcrypto.so", "lib/**/libssl.so"] 
+              "pickFirst": [
+                "lib/**/libcrypto.so",
+                "lib/**/libssl.so"
+              ]
             }
           }
         }
@@ -66,7 +69,8 @@
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
           "recordAudioAndroid": true
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

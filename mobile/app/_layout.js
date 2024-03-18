@@ -12,7 +12,7 @@ import CustomModal from "../components/customModal";
 import useStoreUserEffect from "../clerk/useStoreUserEffect";
 import { Provider as ReduxProvider } from "react-redux";
 import { store } from "../redux/store";
-import UserButton from "./components/userButton";
+import UserButton from "./components/UserButton";
 
 export default function AppLayout() {
   const [visible, setVisible] = React.useState(false);
