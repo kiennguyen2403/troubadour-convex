@@ -2,9 +2,29 @@ import { ConvexReactClient } from "convex/react";
 import { dark } from "@clerk/themes";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
+import useStoreUserEffect from "../clerk/useStoreUserEffect";
+
+import Constants from "expo-constants";
+import * as SecureStore from "expo-secure-store";
+const tokenCache = {
+  async getToken(key) {
+    try {
+      return SecureStore.getItemAsync(key);
+    } catch (err) {
+      return null;
+    }
+  },
+  async saveToken(key, value) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch (err) {
+      return;
+    }
+  },
+};
 
 const convex = new ConvexReactClient(
-  "https://industrious-minnow-226.convex.cloud",
+  "https://honorable-dolphin-640.convex.cloud",
   {
     unsavedChangesWarning: false,
   }
@@ -13,6 +33,7 @@ const convex = new ConvexReactClient(
 function ConvexClientProvider({ children }) {
   return (
     <ClerkProvider
+      tokenCache={tokenCache}
       appearance={{
         baseTheme: dark,
         variables: {
@@ -24,7 +45,7 @@ function ConvexClientProvider({ children }) {
           },
         },
       }}
-      publishableKey="pk_test_Z29yZ2VvdXMtcmVwdGlsZS05MS5jbGVyay5hY2NvdW50cy5kZXYk"
+      publishableKey="pk_test_dHJ1c3RlZC1tYXJtb3NldC04My5jbGVyay5hY2NvdW50cy5kZXYk"
     >
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
         {children}

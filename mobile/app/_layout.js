@@ -9,7 +9,10 @@ import { theme } from './theme/theme';
 import { router } from 'expo-router';
 import { Modal, Text } from 'react-native-paper';
 import CustomModal from '../components/customModal';
-
+import useStoreUserEffect from "../clerk/useStoreUserEffect";
+import { Provider as ReduxProvider } from "react-redux";
+import { store } from "../redux/store";
+import UserButton from "./components/userButton";
 
 export default function AppLayout() {
     const [visible, setVisible] = React.useState(false);
@@ -19,6 +22,7 @@ export default function AppLayout() {
     };
 
     return (
+      <ReduxProvider store={store}>
         <ConvexClientProvider>
             <PaperProvider theme={theme}>
                 <CustomModal isVisible={visible} setVisible={hideModal} />
@@ -62,5 +66,6 @@ export default function AppLayout() {
                 </Stack>
             </PaperProvider>
         </ConvexClientProvider>
+      </ReduxProvider>
     );
 }

@@ -1,21 +1,26 @@
-import { View, ScrollView } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text } from 'react-native-paper';
-import { api } from '../../convex/_generated/api';
-import { useQuery } from 'convex/react';
-import { ImageButton } from '../../components/imageButton';
-import { router } from 'expo-router';
+import { View, ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Text } from "react-native-paper";
+import { api } from "../../convex/_generated/api";
+import { useQuery } from "convex/react";
+import { ImageButton } from "../components/imageButton";
+import { router } from "expo-router";
+import useStoreUserEffect from "../../clerk/useStoreUserEffect";
+import { useSelector } from "react-redux";
+import { selectUserID } from "../../redux/auth-slice";
 
 export default function Tab() {
-    const events = useQuery(api.event.get);
-
-    return (
-        <View style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: "black"
-        }}>
-            <SafeAreaView>
+  const events = useQuery(api.event.get);
+  useStoreUserEffect();
+  return (
+    <View
+      style={{
+        width: "100%",
+        height: "100%",
+        backgroundColor: "black",
+      }}
+    >
+      <SafeAreaView>
                 <ScrollView style={{
                     width: "100%",
                     height: "100%",
@@ -62,17 +67,17 @@ export default function Tab() {
                         </ScrollView>
                     </View>
 
-                    <View>
-                        <Text variant="titleLarge"> Custom</Text>
-                    </View>
-                    <View>
-                        <Text variant="titleLarge"> Recent</Text>
-                    </View>
-                    <View>
-                        <Text variant="titleLarge"> Top Trending</Text>
-                    </View>
-                </ScrollView>
-            </SafeAreaView>
-        </View>
-    );
+          <View>
+            <Text variant="titleLarge"> Custom</Text>
+          </View>
+          <View>
+            <Text variant="titleLarge"> Recent</Text>
+          </View>
+          <View>
+            <Text variant="titleLarge"> Top Trending</Text>
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
+  );
 }
