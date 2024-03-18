@@ -14,12 +14,16 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as analytic from "../analytic.js";
 import type * as comment from "../comment.js";
+import type * as crons from "../crons.js";
 import type * as event from "../event.js";
 import type * as eventActions from "../eventActions.js";
 import type * as genre from "../genre.js";
 import type * as history from "../history.js";
+import type * as http from "../http.js";
 import type * as media from "../media.js";
+import type * as payments from "../payments.js";
 import type * as playlist from "../playlist.js";
 import type * as ticket from "../ticket.js";
 import type * as user from "../user.js";
@@ -33,12 +37,16 @@ import type * as user from "../user.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  analytic: typeof analytic;
   comment: typeof comment;
+  crons: typeof crons;
   event: typeof event;
   eventActions: typeof eventActions;
   genre: typeof genre;
   history: typeof history;
+  http: typeof http;
   media: typeof media;
+  payments: typeof payments;
   playlist: typeof playlist;
   ticket: typeof ticket;
   user: typeof user;

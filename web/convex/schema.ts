@@ -2,6 +2,11 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  payments: defineTable({
+    ticketID: v.string(),
+    stripeId: v.optional(v.string()),
+    confirmTicketID: v.optional(v.string()),
+  }).index("stripeId", ["stripeId"]),
   event: defineTable({
     name: v.string(),
     description: v.string(),
@@ -37,6 +42,7 @@ export default defineSchema({
     playlists: v.array(v.id("playlist")),
     genres: v.array(v.id("genre")),
     medias: v.array(v.id("media")),
+    events: v.array(v.id("event")),
   }),
   comment: defineTable({
     content: v.string(),
@@ -79,5 +85,22 @@ export default defineSchema({
     otherUsers: v.array(v.id("user")),
     genres: v.array(v.id("genre")),
     medias: v.array(v.id("media")),
+  }),
+  analytic: defineTable({
+    userId: v.id("user"),
+    data: v.object({
+      views: v.array(
+        v.object({
+          value: v.number(),
+          dateTime: v.number(),
+        })
+      ),
+      likes: v.array(
+        v.object({
+          value: v.number(),
+          dateTime: v.number(),
+        })
+      ),
+    }),
   }),
 });

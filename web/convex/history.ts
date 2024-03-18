@@ -7,6 +7,7 @@ export const post = mutation({
     playlists: v.array(v.id("playlist")),
     genres: v.array(v.id("genre")),
     medias: v.array(v.id("media")),
+    events: v.array(v.id("event")),
   },
   handler: async (ctx, args) => {
     try {
@@ -39,9 +40,10 @@ type Playlist = {
 };
 
 type Media = {
+  _id: GenericId<"media">;
   userId: string;
-  otherUsers: string[];
-  genres: string[];
+  otherUsers: GenericId<"user">[];
+  genres: GenericId<"genre">[];
   name: string;
   dateTime?: number;
   privacy: "public" | "private";
@@ -57,21 +59,40 @@ type Media = {
   };
 };
 
+type Event = {
+  _id: GenericId<"event">;
+  name: string;
+  description: string;
+  status: string;
+  date: string;
+  isOffline: boolean;
+  genre: string[];
+  xCoordinate: number;
+  yCoordinate: number;
+  tickets: GenericId<"ticket">[];
+  users: GenericId<"user">[];
+  views: number;
+  streamKey: string;
+  playbackID: string;
+};
+
 export const getByUserID = query({
-  args: { userID: v.id("user") },
+  args: { userID: v.string() },
   handler: async (ctx, args) => {
     try {
+      console.log(typeof args.userID);
       if (!args) {
         throw "userID was not provided";
       }
       var recentPlaylist: (Playlist | null)[] = [];
       var recentMedias: (Media | null)[] = [];
+      var recentEvents: (Event | null)[] = [];
       const history = await ctx.db
         .query("history")
         .filter((q) => q.eq(q.field("userID"), args.userID))
         .first();
       if (!history) {
-        return { recentPlaylist: [], recentMedias: [] };
+        return { recentPlaylist: [], recentMedias: [], recentEvents: [] };
       }
       await Promise.all(
         history?.playlists.map(async (playlist) => {
@@ -97,9 +118,26 @@ export const getByUserID = query({
             });
         })
       );
-      return { recentPlaylist: recentPlaylist, recentMedias: recentMedias };
+      await Promise.all(
+        history?.events.map(async (event) => {
+          const res = await ctx.db
+            .query("event")
+            .filter((q) => q.eq(q.field("_id"), event))
+            .first()
+            .then((res) => {
+              console.log("pushed playlist");
+              recentEvents.push(res);
+              console.log(recentEvents);
+            });
+        })
+      );
+      return {
+        recentPlaylist: recentPlaylist,
+        recentMedias: recentMedias,
+        recentEvents: recentEvents,
+      };
     } catch (e) {
-      return { recentPlaylist: [], recentMedias: [] };
+      return { recentPlaylist: [], recentMedias: [], recentEvents: [] };
     }
   },
 });
@@ -153,16 +191,14 @@ export const updatePlaylistHistory = mutation({
             playlists: [],
             genres: [],
             medias: [],
+            events: [],
           })
           .then(async (newHistory) => {
             await ctx.db.patch(newHistory, { playlists: [args.playlist] });
           });
       }
       if (args.playlist && history) {
-        const orderedPlaylist = sortPlaylistHistory(
-          history?.playlists,
-          args.playlist
-        );
+        const orderedPlaylist = sortHistory(history?.playlists, args.playlist);
         await ctx.db.patch(history._id, { playlists: orderedPlaylist });
       }
     } catch (e) {
@@ -173,7 +209,6 @@ export const updatePlaylistHistory = mutation({
 export const updateMediaHistory = mutation({
   args: {
     userID: v.id("user"),
-    playlist: v.id("playlist"),
     media: v.id("media"),
   },
   handler: async (ctx, args) => {
@@ -192,14 +227,15 @@ export const updateMediaHistory = mutation({
             playlists: [],
             genres: [],
             medias: [],
+            events: [],
           })
           .then(async (newHistory) => {
-            await ctx.db.patch(newHistory, { playlists: [args.playlist] });
+            await ctx.db.patch(newHistory, { medias: [args.media] });
           });
       }
       if (args.media && history) {
-        const orderedPlaylist = sortMediaHistory(history?.medias, args.media);
-        await ctx.db.patch(history._id, { medias: orderedPlaylist });
+        const orderedMedia = sortHistory(history?.medias, args.media);
+        await ctx.db.patch(history._id, { medias: orderedMedia });
       }
     } catch (e) {
       return "failure";
@@ -207,24 +243,59 @@ export const updateMediaHistory = mutation({
   },
 });
 
-function sortPlaylistHistory(
-  arr: GenericId<"playlist">[],
-  target: GenericId<"playlist">
-): GenericId<"playlist">[] {
-  const index = arr.indexOf(target);
-  if (index !== -1) {
-    arr.splice(index, 1);
-    arr.unshift(target);
-  } else {
-    arr.unshift(target);
-  }
-  return arr;
-}
+export const updateEventHistory = mutation({
+  args: {
+    userID: v.id("user"),
+    event: v.id("event"),
+  },
+  handler: async (ctx, args) => {
+    try {
+      if (!args) {
+        throw "Arguments were not provided";
+      }
+      var history = await ctx.db
+        .query("history")
+        .filter((q) => q.eq(q.field("userID"), args.userID))
+        .first();
+      if (!history && args.userID) {
+        var newHistory = await ctx.db
+          .insert("history", {
+            userID: args.userID,
+            playlists: [],
+            genres: [],
+            medias: [],
+            events: [],
+          })
+          .then(async (newHistory) => {
+            await ctx.db.patch(newHistory, { events: [args.event] });
+          });
+      }
+      if (args.event && history) {
+        const orderedEvent = sortHistory(history?.events, args.event);
+        await ctx.db.patch(history._id, { events: orderedEvent });
+      }
+    } catch (e) {
+      console.log(e);
+      return "failure";
+    }
+  },
+});
 
-function sortMediaHistory(
-  arr: GenericId<"media">[],
-  target: GenericId<"media">
-): GenericId<"media">[] {
+// function sortPlaylistHistory(
+//   arr: GenericId<"playlist">[],
+//   target: GenericId<"playlist">
+// ): GenericId<"playlist">[] {
+//   const index = arr.indexOf(target);
+//   if (index !== -1) {
+//     arr.splice(index, 1);
+//     arr.unshift(target);
+//   } else {
+//     arr.unshift(target);
+//   }
+//   return arr;
+// }
+
+function sortHistory(arr: any[], target: any): any[] {
   const index = arr.indexOf(target);
   if (index !== -1) {
     arr.splice(index, 1);

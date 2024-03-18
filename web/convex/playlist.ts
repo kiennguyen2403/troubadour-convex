@@ -23,10 +23,29 @@ export const post = mutation({
 });
 
 export const getById = query({
-  args: { id: v.id("playlist") },
+  args: { id: v.string() },
   handler: async (ctx, { id }) => {
     try {
-      return await ctx.db.get(id);
+      const playlist = await ctx.db
+        .query("playlist")
+        .filter((q) => q.eq(q.field("_id"), id))
+        .first();
+
+      if (!playlist) {
+        return null;
+      }
+
+      const fullMedias = [];
+
+      for (const mediaId of playlist.medias) {
+        const media = await ctx.db.get(mediaId);
+        fullMedias.push(media);
+      }
+
+      return {
+        ...playlist,
+        medias: fullMedias,
+      };
     } catch (e) {
       console.log(e);
       return "failure";

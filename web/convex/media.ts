@@ -39,10 +39,13 @@ export const get = query({
 });
 
 export const getById = query({
-  args: { id: v.id("media") },
+  args: { id: v.string() },
   handler: async (ctx, { id }) => {
     try {
-      return await ctx.db.get(id);
+      return await ctx.db
+        .query("media")
+        .filter((q) => q.eq(q.field("_id"), id))
+        .first();
     } catch (e) {
       console.log(e);
       return "failure";
@@ -102,7 +105,7 @@ export const getByGenre = query({
 });
 
 export const getByUserId = query({
-  args: { userId: v.id("user"), paginationOpts: v.optional(paginationOptsValidator) },
+  args: { userId: v.string(), paginationOpts: v.optional(paginationOptsValidator) },
   handler: async (ctx, { userId, paginationOpts }) => {
     try {
       return paginationOpts

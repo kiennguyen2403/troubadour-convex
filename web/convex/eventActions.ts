@@ -61,14 +61,14 @@ export const createEvent = action({
           ticket !== "No name provided for ticket post"
           && ticket !== "No fee provided for ticket post"
           && ticket !== "failure"
-        ) 
+        )
           tickets.push(ticket);
       }
 
-   
+
       if (!args.date) args.date = new Date().toISOString();
 
-      const result: any = await ctx.runMutation(internal.event.post, {
+      await ctx.runMutation(internal.event.post, {
         name: args.name,
         description: args.description,
         status: args.status,
@@ -84,7 +84,7 @@ export const createEvent = action({
         playbackID: streamKey.playback_ids ? streamKey.playback_ids[0].id : "",
       });
 
-      return streamKey.id;
+      return streamKey.stream_key;
     } catch (e) {
       console.log(e);
       return "failure";
@@ -185,15 +185,11 @@ export const buyTicket: any = action({
   args: {
     id: v.id("event"),
     user: v.id("user"),
-    cardNumber: v.string(),
-    cvc: v.string(),
-    exp_month: v.number(),
-    exp_year: v.number(),
-    cardHolder: v.string(),
   },
-  handler: async (ctx, { id, user, cardNumber, cvc, exp_month, exp_year, cardHolder }) => {
+  handler: async (ctx, { id, user }) => {
     try {
       const event = await ctx.runQuery(api.event.getById, { id: id });
+      console.log(event);
       if (
         event === "failure" ||
         !event ||
@@ -204,6 +200,7 @@ export const buyTicket: any = action({
         return "failure";
 
       let ticketId;
+      let price = 0;
       for (const ticket of event.tickets) {
         const result = await ctx.runQuery(api.ticket.getById, {
           id: ticket,
@@ -212,40 +209,77 @@ export const buyTicket: any = action({
         if (result.status === "sold") continue;
         else {
           ticketId = result._id;
+          price = result.fee;
           break;
         }
       }
 
       if (!ticketId) return "failure";
 
-      // const paymentMethod = await stripe.paymentMethods.create({
-      //   type: 'card',
-      //   card: {
-      //     number: cardNumber,
-      //     cvc: cvc,
-      //     exp_month: exp_month, // Replace with the expiration month of the card
-      //     exp_year: exp_year // Replace with the expiration year of the card
-      //   },
-      //   billing_details: {
-      //     name: cardHolder
-      //   }
-      // });
+      const domain = process.env.HOST || "http://localhost:3000";
 
-      // await stripe.paymentIntents.create({
-      //   amount: 1000,
-      //   currency: "usd",
-      //   payment_method: paymentMethod.id,
-      //   payment_method_types: ["card"],
-      // });
 
-      return await ctx.runMutation(internal.ticket.patch, {
+      const paymentId = await ctx.runMutation(internal.payments.create, { text: ticketId });
+
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: "Ticket",
+              },
+              unit_amount: price * 100,
+            },
+            quantity: 1,
+          },
+        ],
+        mode: "payment",
+        success_url: `${domain}?paymentId=${paymentId}`,
+        cancel_url: `${domain}`,
+      });
+
+      await ctx.runMutation(internal.ticket.patch, {
         id: ticketId,
         user: user,
         status: "sold",
       });
+
+      await ctx.runMutation(internal.payments.markPending, {
+        paymentId,
+        stripeId: session.id,
+      });
+
+      return session.url;
     } catch (e) {
       console.log(e);
       return "failure";
+    }
+  },
+});
+
+export const fulfill = internalAction({
+  args: { signature: v.string(), payload: v.string() },
+  handler: async (ctx, { signature, payload }) => {
+
+    const webhookSecret = process.env.STRIPE_WEBHOOKS_SECRET as string;
+    try {
+      // This call verifies the request
+      const event = stripe.webhooks.constructEvent(
+        payload,
+        signature,
+        webhookSecret
+      );
+      if (event.type === "checkout.session.completed") {
+        const stripeId = (event.data.object as { id: string }).id;
+        // Send the message and mark the payment as fulfilled
+        await ctx.runMutation(internal.payments.fulfill, { stripeId });
+      }
+      return { success: true };
+    } catch (err) {
+      console.error(err);
+      return { success: false };
     }
   },
 });

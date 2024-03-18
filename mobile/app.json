@@ -22,6 +22,20 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.kiennguyendev.troubadour",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBQnxghjgjl_JRUzLIRCLxt3e-g0amWO1c"
+        }
       }
     },
     "web": {
@@ -29,7 +43,41 @@
     },
     "plugins": [
       "expo-router",
-      "expo-location",
-    ]
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "packagingOptions": {
+              "pickFirst": ["lib/**/libcrypto.so", "lib/**/libssl.so"] 
+            }
+          }
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bb212d91-253f-4234-ba10-589cfd8adcb3"
+      }
+    }
   }
 }
