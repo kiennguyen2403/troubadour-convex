@@ -7,6 +7,7 @@ import { Text, IconButton } from "react-native-paper";
 import { PermissionsAndroid, StyleSheet, Platform, Button } from 'react-native';
 import { AudioInputType, BluetoothDeviceStatuses } from 'react-native-rtmp-publisher';
 import { router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 
 const config = {
     cameraConfig: {
@@ -28,6 +29,8 @@ const config = {
 };
 
 export default function Tab() {
+    const { streamKey } = useLocalSearchParams();
+    console.log(streamKey);
     const publisherRef = useRef(null);
     const [isStreaming, setIsStreaming] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
@@ -35,7 +38,7 @@ export default function Tab() {
     const [cameraPermission, requestCameraPermission] = Camera.useCameraPermissions();
     const [audioPermission, requestAudioPermission] = Audio.usePermissions();
     const [bluetoothPermission, requestBlueToothPermission] = useState(null);
-    const STREAM_NAME = 'adfb3f31-95f5-4034-a77f-04caa340ab00';
+    const STREAM_NAME = "aab84b16-9381-8d69-c822-11ccdbb6a2a5";
     const STREAM_URL = 'rtmp://global-live.mux.com:5222/app';
 
     const handleOnConnectionFailed = (data) => {
@@ -118,7 +121,7 @@ export default function Tab() {
         <View style={styles.container}>
             <IconButton
                 icon="arrow-left"
-                onPress={() => router.push("/")}
+                onPress={() => router.navigate("/")}
                 style={{
                     position: 'absolute',
                     top: 0,
@@ -130,7 +133,7 @@ export default function Tab() {
             <RTMPPublisher
                 ref={publisherRef}
                 streamURL={STREAM_URL}
-                streamName={STREAM_NAME}
+                streamName={streamKey}
                 style={styles.publisher_camera}
                 onDisconnect={handleOnDisconnect}
                 onConnectionFailed={handleOnConnectionFailed}

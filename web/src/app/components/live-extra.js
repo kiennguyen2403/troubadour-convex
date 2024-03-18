@@ -67,7 +67,9 @@ export const LiveExtra = () => {
                 <Typography>{file ? file.name : "Choose image for event"}</Typography>
             </label>
 
-            <Stack direction="row" gap={1} flexWrap="wrap" padding="1rem">
+            <Stack direction="row" gap={1} flexWrap="wrap" padding="1rem" sx={{
+                marginTop: "1rem"
+            }}>
                 {genres.map((genre, index) => (
                     <Chip
                         key={index}

@@ -71,10 +71,10 @@ export default function Home() {
       </Typography>
       <Grid container spacing={2}>
         {live?.length > 0 ? (
-          live.map((item) => (
+          live.map((item, index ) => (
             <Grid item xs={4}>
               <VideoButton
-                image={item.image}
+                image={item?.image ?? "https://picsum.photos/500?random="+ index }
                 title={item.name}
                 description={item.description}
                 eventHandler={() => {
