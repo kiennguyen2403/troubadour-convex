@@ -40,6 +40,7 @@ export default function SignUpScreen() {
       alert(err.errors[0].message);
     } finally {
       setLoading(false);
+      router.navigate("signin");
     }
   };
 

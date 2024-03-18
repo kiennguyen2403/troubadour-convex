@@ -6,11 +6,12 @@ import { useQuery } from "convex/react";
 import { ImageButton } from "../components/imageButton";
 import { router } from "expo-router";
 import useStoreUserEffect from "../../clerk/useStoreUserEffect";
+import { useSelector } from "react-redux";
+import { selectUserID } from "../../redux/auth-slice";
 
 export default function Tab() {
   const events = useQuery(api.event.get);
   useStoreUserEffect();
-
   return (
     <View
       style={{

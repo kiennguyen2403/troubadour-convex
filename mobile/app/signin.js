@@ -4,6 +4,7 @@ import { TouchableOpacity, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
+import SignInWithOAuth from "./components/signInWithOAuth";
 
 export default function SignInScreen() {
   const { signIn, setActive, isLoaded } = useSignIn();
@@ -29,6 +30,7 @@ export default function SignInScreen() {
       alert(err.errors[0].message);
     } finally {
       setLoading(false);
+      router.navigate("index");
     }
   };
   return (
@@ -44,7 +46,9 @@ export default function SignInScreen() {
       }}
     >
       <Text variant="titleLarge">Sign In</Text>
-
+      <View style={{ width: "100%", padding: 10 }}>
+        <SignInWithOAuth></SignInWithOAuth>
+      </View>
       <View
         style={{
           width: "100%",

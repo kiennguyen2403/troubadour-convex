@@ -1,16 +1,19 @@
-import { useAuth } from "@clerk/clerk-expo";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import React from "react";
 import { View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Navigator, router } from "expo-router";
+import { useConvexAuth } from "convex/react";
+import SignOut from "./signOutButton";
 
 function UserButton() {
-  const user = useAuth();
-  console.log(user);
+  const user = useConvexAuth();
+  const userDetails = useUser();
+  console.log(userDetails);
   return (
     <>
-      {user.isSignedIn ? (
-        <></>
+      {userDetails.isSignedIn ? (
+        <SignOut image={userDetails.imageUrl}></SignOut>
       ) : (
         <MaterialIcons
           size={28}
