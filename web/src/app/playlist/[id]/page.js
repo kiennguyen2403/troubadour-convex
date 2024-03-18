@@ -40,6 +40,7 @@ import {
   setMedias,
   setCurrentMediaArtist,
   setCurrentMediaTitle,
+  setCurrentMediaId,
 } from "@/redux/media-slice";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -60,7 +61,8 @@ export default function Playlist({ params }) {
     try {
       dispatch(setMedias([media.fileUrl]));
       dispatch(setIsPlaying(!isPlaying));
-      dispatch(setCurrentMedia(media._id));
+      dispatch(setCurrentMedia(0));
+      dispatch(setCurrentMediaId(media._id));
       dispatch(setCurrentMediaTitle(media.name));
       dispatch(setCurrentMediaArtist(artist));
     } catch (err) {

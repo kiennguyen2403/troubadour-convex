@@ -225,7 +225,8 @@ export default function Home() {
 
   return (
     <ClippedDrawer
-      Component={isLoading ? [Loading] : [LiveStream, Custom, Recent, Top]}
+      // Component={isLoading ? [Loading] : [LiveStream, Custom, Recent, Top]}
+      Component={isLoading ? [Loading] : [LiveStream]}
     />
   );
 }

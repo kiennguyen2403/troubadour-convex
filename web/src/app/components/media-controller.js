@@ -23,6 +23,7 @@ import {
   selectIsPlaying,
   selectCurrentMediaArtist,
   selectCurrentMediaTitle,
+  selectCurrentMediaId,
 } from "../../redux/media-slice";
 import { useMutation } from "convex/react";
 import { selectUserID } from "@/redux/auth-slice";
@@ -34,6 +35,7 @@ export default function MediaControl() {
   const user = useSelector(selectUserID);
   const medias = useSelector(selectMedias);
   const media = useSelector(selectCurrentMedia);
+  const mediaId = useSelector(selectCurrentMediaId);
   const isPlaying = useSelector(selectIsPlaying);
   const title = useSelector(selectCurrentMediaTitle);
   const artist = useSelector(selectCurrentMediaArtist);
@@ -51,12 +53,12 @@ export default function MediaControl() {
 
   const handlePlay = async () => {
     if (medias.length === 0) return;
-    dispatch(setIsPlaying(false));
+    dispatch(setIsPlaying(!isPlaying));
     if (audioRef === null) return;
     audioRef.current.play();
     await updateHistory({
       userID: user,
-      media: media,
+      media: mediaId,
     });
   };
 
@@ -150,30 +152,22 @@ export default function MediaControl() {
           </CardContent>
           <Box sx={{ alignItems: "center", width: "40%" }}>
             <Box sx={{ flex: 1 }}>
-              <IconButton aria-label="previous" onClick={handlePrevious}>
-                {theme.direction === "rtl" ? (
-                  <SkipNextIcon />
-                ) : (
-                  <SkipPreviousIcon />
-                )}
-              </IconButton>
-              <IconButton
-                aria-label="play/pause"
-                onClick={isPlaying ? handlePlay : handlePause}
-              >
-                {isPlaying ? (
-                  <PlayArrowIcon sx={{ height: 38, width: 38 }} />
-                ) : (
-                  <PauseIcon sx={{ height: 38, width: 38 }} />
-                )}
-              </IconButton>
-              <IconButton aria-label="next" onClick={handleNext}>
-                {theme.direction === "rtl" ? (
-                  <SkipPreviousIcon />
-                ) : (
-                  <SkipNextIcon />
-                )}
-              </IconButton>
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <IconButton aria-label="previous" onClick={handlePrevious}>
+                  {theme.direction === "rtl" ? <SkipNextIcon /> : <SkipPreviousIcon />}
+                </IconButton>
+                <IconButton aria-label="play/pause" onClick={isPlaying ? handlePlay : handlePause}>
+                  {isPlaying ? (
+                    <PlayArrowIcon sx={{ height: 38, width: 38 }} />
+                  ) : (
+                    <PauseIcon sx={{ height: 38, width: 38 }} />
+                  )}
+                </IconButton>
+                <IconButton aria-label="next" onClick={handleNext}>
+                  {theme.direction === "rtl" ? <SkipPreviousIcon /> : <SkipNextIcon />}
+                </IconButton>
+              </div>
+
               <Box sx={{ flex: 1 }}>
                 <audio
                   ref={audioRef}
